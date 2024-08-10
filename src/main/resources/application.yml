@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: student-score-management
+  output:
+    ansi:
+      enabled: always
