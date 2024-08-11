@@ -1,19 +1,23 @@
 package com.ssm.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
 
-@Entity
-@Table(name = "activity_kind")
 @Data
+@Entity
+@Table(name = "activity_kinds")
 public class ActivityKind {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String description;
-    private int maxScore;
+    @Column(name = "id", nullable = false)
+    private Long id;
 
-    @ColumnDefault("0")
-    private int minScore;
+    @Column(name = "description", length = 200)
+    private String description;
+
+    @Column(name = "max_score")
+    private Integer maxScore;
+
 }
