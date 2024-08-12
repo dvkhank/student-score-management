@@ -17,6 +17,6 @@ public class ActivityController {
 
     @GetMapping("/activities")
     public List<Activity> getActivities() {
-        return activityService.findAll();
+        return activityService.getAll();
     }
 }

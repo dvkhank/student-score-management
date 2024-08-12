@@ -14,7 +14,7 @@ public class ActivityServiceImpl implements ActivityService {
     private ActivityRepository activityRepository;
 
     @Override
-    public List<Activity> findAll() {
+    public List<Activity> getAll() {
         return activityRepository.findAll();
     }
 }
