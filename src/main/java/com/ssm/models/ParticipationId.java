@@ -2,12 +2,14 @@ package com.ssm.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import java.util.Objects;
 
-@Data
+@Getter
+@Setter
 @Embeddable
 public class ParticipationId implements java.io.Serializable {
     private static final long serialVersionUID = -2393039559739779767L;

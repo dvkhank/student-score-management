@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "activies")
-public class Activy {
+@Table(name = "activities")
+public class Activity {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
@@ -27,15 +27,15 @@ public class Activy {
     @Column(name = "score")
     private Integer score;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "activity_kind_id")
     private com.ssm.models.ActivityKind activityKind;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "faculty_id")
     private com.ssm.models.Faculty faculty;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "period_id")
     private com.ssm.models.Period period;
 

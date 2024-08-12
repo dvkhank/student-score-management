@@ -1,4 +1,4 @@
-package com.ssm.repo;
+package com.ssm.repositories;
 
 import com.ssm.models.Class;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,12 +1,14 @@
 package com.ssm.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "participation")
 public class Participation {
@@ -21,7 +23,7 @@ public class Participation {
     @MapsId("activityId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "activity_id", nullable = false)
-    private Activy activity;
+    private Activity activity;
 
     @Column(name = "parcipated_date")
     private LocalDate parcipatedDate;
