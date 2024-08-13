@@ -1,7 +1,7 @@
 package com.ssm.controllers;
 
-import com.ssm.models.Activity;
-import com.ssm.services.ActivityService;
+import com.ssm.models.Faculty;
+import com.ssm.services.FacultyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,12 +11,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class ApiActivityController {
+public class ApiFacultyController {
     @Autowired
-    private ActivityService activityService;
-
-    @GetMapping("/activities")
-    public List<Activity> getActivities() {
-        return activityService.getAll();
+    private FacultyService facultyService;
+    @GetMapping("/faculties")
+    public List<Faculty> getAllFaculties() {
+        return facultyService.getAllFaculty();
     }
 }

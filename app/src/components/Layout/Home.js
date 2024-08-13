@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import APIs, { endpoints } from "../../configs/APIs";
 import {
+  Button,
   Container,
   Nav,
   Navbar,
@@ -8,7 +9,8 @@ import {
   Spinner,
   Table,
 } from "react-bootstrap";
-
+import MySprinner from "../Commons/MySprinner";
+import { useNavigate } from "react-router-dom";
 function Home() {
   const [kinds, setKinds] = useState(null);
   const loadKinds = async () => {
@@ -25,6 +27,28 @@ function Home() {
   useEffect(() => {
     loadKinds();
   }, []);
+
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const loadActivities = async () => {
+    setLoading(true);
+    try {
+      const res = await APIs.get(endpoints["activities"]);
+      setActivities(res.data);
+    } catch (ex) {
+      console.error(ex);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    loadActivities();
+  }, []);
+  const navigator = useNavigate();
+
+  function addAnActivity() {
+    navigator("/add-activity");
+  }
 
   return (
     <>
@@ -43,21 +67,17 @@ function Home() {
               {/* Small boxes (Stat box) */}
 
               {kinds === null ? (
-                <Spinner animation="border" variant="info" />
+                <MySprinner />
               ) : (
                 <>
                   <Navbar expand="lg" className="bg-body-tertiary">
                     <Container>
-                      <Navbar.Brand href="#home">
-                        Student Score Management
-                      </Navbar.Brand>
+                      <Navbar.Brand>Student Score Management</Navbar.Brand>
                       <Navbar.Toggle aria-controls="basic-navbar-nav" />
                       <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
                           {kinds.map((k) => (
-                            <Nav.Link key={k.id} href="#home">
-                              Rule {k.id}
-                            </Nav.Link>
+                            <Nav.Link key={k.id}>Kind {k.id}</Nav.Link>
                           ))}
                         </Nav>
                       </Navbar.Collapse>
@@ -67,8 +87,56 @@ function Home() {
               )}
               {/* /.row */}
               {/* Main row */}
+              <Button onClick={addAnActivity} className="btn btn-primary">
+                Add an activity
+              </Button>
               <div className="row">
-                <div className="container"></div>
+                <div className="container text-center">
+                  {loading === true ? (
+                    <MySprinner />
+                  ) : (
+                    <>
+                      <Table striped bordered hover>
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Score</th>
+                            <th>Kind</th>
+                            <th>Faculty</th>
+                            <th>Period</th>
+                            <th>Money</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {activities.map((a) => (
+                            <tr key={a.id}>
+                              <td>{a.id}</td>
+                              <td>{a.name}</td>
+                              <td>{a.description}</td>
+                              <td>{a.score}</td>
+                              <td>{a.activityKind.id}</td>
+                              <td>{a.faculty.name}</td>
+                              <td>
+                                Semester {a.period.semester} - Year{" "}
+                                {a.period.year}
+                              </td>
+                              <td>{a.money === 0 ? "Free" : a.money}</td>
+                              <td>
+                                <Button className="btn btn-info">Edit</Button>
+                                <Button className="btn btn-danger">
+                                  Delete
+                                </Button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
+                    </>
+                  )}
+                </div>
               </div>
               {/* /.row (main row) */}
             </div>
