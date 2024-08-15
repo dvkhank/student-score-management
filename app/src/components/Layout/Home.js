@@ -1,16 +1,9 @@
 import { useEffect, useState } from "react";
 import APIs, { endpoints } from "../../configs/APIs";
-import {
-  Button,
-  Container,
-  Nav,
-  Navbar,
-  NavDropdown,
-  Spinner,
-  Table,
-} from "react-bootstrap";
+import { Button, Container, Nav, Navbar, Table } from "react-bootstrap";
 import MySprinner from "../Commons/MySprinner";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 function Home() {
   const [kinds, setKinds] = useState(null);
   const loadKinds = async () => {
@@ -49,6 +42,26 @@ function Home() {
   function addAnActivity() {
     navigator("/add-activity");
   }
+  const editActivity = (id) => {
+    navigator(`/edit-activity/${id}`);
+  };
+
+  const deleteActivity = async (id) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this activity?"
+    );
+
+    if (!isConfirmed) {
+      return;
+    }
+    try {
+      await axios.delete(`http://localhost:8080/api/activities/${id}`);
+      alert("Activity deleted successfully");
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <>
@@ -125,8 +138,16 @@ function Home() {
                               </td>
                               <td>{a.money === 0 ? "Free" : a.money}</td>
                               <td>
-                                <Button className="btn btn-info">Edit</Button>
-                                <Button className="btn btn-danger">
+                                <Button
+                                  onClick={() => editActivity(a.id)}
+                                  className="btn btn-info"
+                                >
+                                  Edit
+                                </Button>
+                                <Button
+                                  className="btn btn-danger"
+                                  onClick={() => deleteActivity(a.id)}
+                                >
                                   Delete
                                 </Button>
                               </td>

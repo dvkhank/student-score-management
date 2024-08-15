@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ActivityServiceImpl implements ActivityService {
 
@@ -21,5 +23,14 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public void addOrUpdateActivity(Activity activity) {
         activityRepository.save(activity);
+    }
+
+    public Optional<Activity> getActivityById(Long id) {
+        return activityRepository.findById(id);
+    }
+
+
+    public void deleteActivityById(Long id) {
+        activityRepository.deleteById(id);
     }
 }

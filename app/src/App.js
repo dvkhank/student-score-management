@@ -6,6 +6,7 @@ import SideNav from "./components/Layout/SideNav";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Activity from "./components/Activity/Activity";
+import EditActivity from "./components/Activity/EditActivity";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/add-activity" element={<Activity />} />
+          <Route path="/edit-activity/:id" element={<EditActivity />} />
         </Routes>
         <SideNav />
         <Footer />
