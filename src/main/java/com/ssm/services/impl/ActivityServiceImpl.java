@@ -17,4 +17,9 @@ public class ActivityServiceImpl implements ActivityService {
     public List<Activity> getAll() {
         return activityRepository.findAll();
     }
+
+    @Override
+    public void addOrUpdateActivity(Activity activity) {
+        activityRepository.save(activity);
+    }
 }

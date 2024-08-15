@@ -7,6 +7,7 @@ export const endpoints = {
   kinds: "api/kinds",
   faculties: "api/faculties",
   periods: "api/periods",
+  add_activities: "api/add-activity",
 };
 
 export default axios.create({
