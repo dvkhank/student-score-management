@@ -20,8 +20,8 @@ public class ApiActivityController {
     private ActivityService activityService;
 
     @GetMapping("/activities")
-    public List<Activity> getActivities() {
-        return activityService.getAll();
+    public List<Activity> getActivities(@RequestParam Map<String, String> params) {
+        return activityService.getActivities(params);
     }
 
     @PostMapping("/add-activity")

@@ -3,6 +3,7 @@ package com.ssm.services;
 import com.ssm.models.Activity;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface ActivityService {
@@ -10,4 +11,5 @@ public interface ActivityService {
     void addOrUpdateActivity(Activity activity);
     public Optional<Activity> getActivityById(Long id);
     public void deleteActivityById(Long id);
+    public List<Activity> getActivities(Map<String, String> params);
 }

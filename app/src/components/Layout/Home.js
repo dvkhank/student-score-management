@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
 import APIs, { endpoints } from "../../configs/APIs";
-import { Button, Container, Nav, Navbar, Table } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Nav,
+  Navbar,
+  Row,
+  Table,
+} from "react-bootstrap";
 import MySprinner from "../Commons/MySprinner";
-import { useNavigate } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 import axios from "axios";
 function Home() {
   const [kinds, setKinds] = useState(null);
@@ -57,7 +65,7 @@ function Home() {
     try {
       await axios.delete(`http://localhost:8080/api/activities/${id}`);
       alert("Activity deleted successfully");
-      window.location.reload();
+      loadActivities(); // Reload the activities list
     } catch (err) {
       console.error(err);
     }
@@ -145,7 +153,7 @@ function Home() {
                                   Edit
                                 </Button>
                                 <Button
-                                  className="btn btn-danger"
+                                  className="btn btn-danger m-1"
                                   onClick={() => deleteActivity(a.id)}
                                 >
                                   Delete
