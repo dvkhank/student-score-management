@@ -4,13 +4,14 @@ import {
   Button,
   Col,
   Container,
+  Form,
   Nav,
   Navbar,
   Row,
   Table,
 } from "react-bootstrap";
 import MySprinner from "../Commons/MySprinner";
-import { Form, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 function Home() {
   const [kinds, setKinds] = useState(null);
@@ -28,13 +29,18 @@ function Home() {
   useEffect(() => {
     loadKinds();
   }, []);
-
+  const [activityKindId, setActivityKindId] = useState("");
+  const [keyword, setKeyword] = useState("");
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(false);
   const loadActivities = async () => {
     setLoading(true);
     try {
-      const res = await APIs.get(endpoints["activities"]);
+      let url = `${endpoints["activities"]}?keyword=${keyword}`;
+      if (activityKindId) {
+        url = `${url}&activityKindId=${activityKindId}`;
+      }
+      const res = await APIs.get(url);
       setActivities(res.data);
     } catch (ex) {
       console.error(ex);
@@ -44,7 +50,7 @@ function Home() {
   };
   useEffect(() => {
     loadActivities();
-  }, []);
+  }, [keyword, activityKindId]);
   const navigator = useNavigate();
 
   function addAnActivity() {
@@ -70,6 +76,10 @@ function Home() {
       console.error(err);
     }
   };
+  const searchKind = (e, activityKindId) => {
+    e.preventDefault();
+    setActivityKindId(activityKindId);
+  };
 
   return (
     <>
@@ -79,6 +89,7 @@ function Home() {
           {/* Content Header (Page header) */}
           <div className="content-header">
             <div className="container-fluid"></div>
+
             {/* /.container-fluid */}
           </div>
           {/* /.content-header */}
@@ -86,7 +97,6 @@ function Home() {
           <section className="content">
             <div className="container-fluid">
               {/* Small boxes (Stat box) */}
-
               {kinds === null ? (
                 <MySprinner />
               ) : (
@@ -98,7 +108,12 @@ function Home() {
                       <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
                           {kinds.map((k) => (
-                            <Nav.Link key={k.id}>Kind {k.id}</Nav.Link>
+                            <Nav.Link
+                              key={k.id}
+                              onClick={(e) => searchKind(e, k.id)}
+                            >
+                              Kind {k.id}
+                            </Nav.Link>
                           ))}
                         </Nav>
                       </Navbar.Collapse>
@@ -106,9 +121,22 @@ function Home() {
                   </Navbar>
                 </>
               )}
+              <Form className="d-inline">
+                <Row className="mb-3">
+                  <Col xs="auto">
+                    <Form.Control
+                      type="text"
+                      placeholder="Search"
+                      className=" mr-sm-2"
+                      value={keyword}
+                      onChange={(event) => setKeyword(event.target.value)}
+                    />
+                  </Col>
+                </Row>
+              </Form>
               {/* /.row */}
               {/* Main row */}
-              <Button onClick={addAnActivity} className="btn btn-primary">
+              <Button onClick={addAnActivity} className="btn btn-primary mb-3">
                 Add an activity
               </Button>
               <div className="row">
