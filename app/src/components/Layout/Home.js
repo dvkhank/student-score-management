@@ -29,6 +29,7 @@ function Home() {
   useEffect(() => {
     loadKinds();
   }, []);
+  const [page, setPage] = useState(1);
   const [activityKindId, setActivityKindId] = useState("");
   const [keyword, setKeyword] = useState("");
   const [activities, setActivities] = useState([]);
@@ -36,12 +37,16 @@ function Home() {
   const loadActivities = async () => {
     setLoading(true);
     try {
-      let url = `${endpoints["activities"]}?keyword=${keyword}`;
+      let url = `${endpoints["activities"]}?keyword=${keyword}&page=${page}`;
       if (activityKindId) {
         url = `${url}&activityKindId=${activityKindId}`;
       }
       const res = await APIs.get(url);
-      setActivities(res.data);
+      if (page === 1) setActivities(res.data);
+      else
+        setActivities((current) => {
+          return [...current, ...res.data];
+        });
     } catch (ex) {
       console.error(ex);
     } finally {
@@ -50,7 +55,7 @@ function Home() {
   };
   useEffect(() => {
     loadActivities();
-  }, [keyword, activityKindId]);
+  }, [keyword, activityKindId, page]);
   const navigator = useNavigate();
 
   function addAnActivity() {
@@ -79,6 +84,9 @@ function Home() {
   const searchKind = (e, activityKindId) => {
     e.preventDefault();
     setActivityKindId(activityKindId);
+  };
+  const loadMore = () => {
+    if (!loading) setPage(page + 1);
   };
 
   return (
@@ -191,6 +199,14 @@ function Home() {
                           ))}
                         </tbody>
                       </Table>
+                      <button
+                        onClick={loadMore}
+                        type="submit"
+                        class="btn btn-primary"
+                        disabled={loading}
+                      >
+                        Load more
+                      </button>
                     </>
                   )}
                 </div>

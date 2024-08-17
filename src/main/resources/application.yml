@@ -7,7 +7,9 @@ spring:
     generate-ddl: false
     show-sql: true
     open-in-view: false
-
+  reds:
+    host: localhost
+    port: 6379
   application:
     name: ssm
   output:
