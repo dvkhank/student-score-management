@@ -54,6 +54,8 @@ public class ApiLogin {
             String lastName = claims.get("lastName", String.class);
             String email = claims.get("email", String.class);
             String avatar = claims.get("avatar", String.class);
+            String role = claims.get("role", String.class);
+
 
             // Tạo đối tượng phản hồi với thông tin người dùng
             Map<String, Object> response = new HashMap<>();
@@ -61,6 +63,8 @@ public class ApiLogin {
             response.put("lastName", lastName);
             response.put("email", email);
             response.put("avatar", avatar);
+            response.put("role", avatar);
+
 
             return ResponseEntity.ok(response);
         } else {

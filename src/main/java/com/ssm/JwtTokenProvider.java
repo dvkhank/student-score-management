@@ -35,6 +35,7 @@ public class JwtTokenProvider {
                 .claim("lastName", user.getLastname()) // Thêm thông tin bổ sung vào token
                 .claim("email", user.getRole())
                 .claim("avatar", user.getAvatar())
+                .claim("role", user.getRole()) // Thêm quyền vào token
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, secretKey)
