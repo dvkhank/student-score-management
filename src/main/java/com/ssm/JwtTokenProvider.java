@@ -31,9 +31,9 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
+                .claim("id", user.getId().toString())
                 .claim("firstName", user.getFirstname()) // Thêm thông tin bổ sung vào token
                 .claim("lastName", user.getLastname()) // Thêm thông tin bổ sung vào token
-                .claim("email", user.getRole())
                 .claim("avatar", user.getAvatar())
                 .claim("role", user.getRole()) // Thêm quyền vào token
                 .setIssuedAt(new Date())

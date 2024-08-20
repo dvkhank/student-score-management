@@ -26,9 +26,6 @@ function Home() {
     }
   };
 
-  useEffect(() => {
-    loadKinds();
-  }, []);
   const [page, setPage] = useState(1);
   const [activityKindId, setActivityKindId] = useState("");
   const [keyword, setKeyword] = useState("");
@@ -38,6 +35,7 @@ function Home() {
     setLoading(true);
     try {
       let url = `${endpoints["activities"]}?keyword=${keyword}&page=${page}`;
+
       if (activityKindId) {
         url = `${url}&activityKindId=${activityKindId}`;
       }
@@ -56,6 +54,10 @@ function Home() {
   useEffect(() => {
     loadActivities();
   }, [keyword, activityKindId, page]);
+
+  useEffect(() => {
+    loadKinds();
+  }, []);
   const navigator = useNavigate();
 
   function addAnActivity() {
@@ -86,7 +88,9 @@ function Home() {
     setActivityKindId(activityKindId);
   };
   const loadMore = () => {
-    if (!loading) setPage(page + 1);
+    if (!loading) {
+      setPage((prevPage) => prevPage + 1);
+    }
   };
 
   return (
@@ -202,7 +206,7 @@ function Home() {
                       <button
                         onClick={loadMore}
                         type="submit"
-                        class="btn btn-primary"
+                        className="btn btn-primary"
                         disabled={loading}
                       >
                         Load more

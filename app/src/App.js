@@ -7,6 +7,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Activity from "./components/Activity/Activity";
 import EditActivity from "./components/Activity/EditActivity";
+import Login from "./components/Auth/Login";
+import Signup from "./components/Auth/Signup";
+import StudentHome from "./components/Student/StudentHome";
 
 function App() {
   return (
@@ -14,9 +17,12 @@ function App() {
       <div className="wrapper">
         <Header />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/add-activity" element={<Activity />} />
-          <Route path="/edit-activity/:id" element={<EditActivity />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/admin/add-activity" element={<Activity />} />
+          <Route path="/admin/" element={<Home />} />
+          <Route path="/student/" element={<StudentHome />} />
+          <Route path="/admin/edit-activity/:id" element={<EditActivity />} />
         </Routes>
         <SideNav />
         <Footer />
