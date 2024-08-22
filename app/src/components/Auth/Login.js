@@ -18,7 +18,7 @@ function Login() {
         password,
       });
       const token = response.data; // Assuming token is returned as plain string
-      localStorage.setItem("token", token); // Store token in localStorage
+      sessionStorage.setItem("token", token);
       // Redirect based on role
       if (role === "Student") {
         navigate("/student/");

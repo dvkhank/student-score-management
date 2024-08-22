@@ -17,7 +17,6 @@ spring:
     ansi:
       enabled: always
 
-
 management:
   server:
     port: 9001

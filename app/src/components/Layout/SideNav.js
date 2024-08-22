@@ -1,98 +1,60 @@
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import MySprinner from "../Commons/MySprinner";
+import { Card, CardBody, ListGroup } from "react-bootstrap";
+
 function SideNav() {
+  const [userInfo, setUserInfo] = useState(null);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  const getUserInfo = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/api/userinfo", {
+        headers: { Authorization: sessionStorage.getItem("token") },
+      });
+      setUserInfo(res.data);
+    } catch (error) {
+      console.error("Failed to fetch user info", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("token"); // Remove token from sessionStorage
+    navigate("/"); // Redirect to the login page
+  };
+  if (loading) {
+    return <MySprinner />;
+  }
+  if (!userInfo) {
+    return <div>Error: Unable to fetch user info</div>;
+  }
   return (
-    <>
-      <div>
-        <aside className="main-sidebar sidebar-dark-primary elevation-4">
-          {/* Brand Logo */}
-          <a href="index3.html" className="brand-link">
+    <div>
+      <aside className="main-sidebar text-center elevation-4">
+        <Card>
+          <CardBody>
             <img
-              src="dist/img/AdminLTELogo.png"
-              alt="AdminLTE Logo"
-              className="brand-image img-circle elevation-3"
-              style={{ opacity: ".8" }}
+              width="100"
+              height="100"
+              src={userInfo.avatar || "/default-avatar.png"}
             />
-            <span className="brand-text font-weight-light">Hi! Admin</span>
-          </a>
-          {/* Sidebar */}
-          <div className="sidebar">
-            {/* Sidebar user panel (optional) */}
-            <div className="user-panel mt-3 pb-3 mb-3 d-flex">
-              <div className="image">
-                <img
-                  src="dist/img/user2-160x160.jpg"
-                  className="img-circle elevation-2"
-                  alt="User Image"
-                />
-              </div>
-              <div className="info">
-                <a href="#" className="d-block">
-                  Admin
-                </a>
-              </div>
-            </div>
-            {/* SidebarSearch Form */}
-            <div className="form-inline">
-              <div className="input-group" data-widget="sidebar-search">
-                <input
-                  className="form-control form-control-sidebar"
-                  type="search"
-                  placeholder="Search"
-                  aria-label="Search"
-                />
-                <div className="input-group-append">
-                  <button className="btn btn-sidebar">
-                    <i className="fas fa-search fa-fw" />
-                  </button>
-                </div>
-              </div>
-            </div>
-            {/* Sidebar Menu */}
-            <nav className="mt-2">
-              <ul
-                className="nav nav-pills nav-sidebar flex-column"
-                data-widget="treeview"
-                role="menu"
-                data-accordion="false"
-              >
-                {/* Add icons to the links using the .nav-icon class
-         with font-awesome or any other icon font library */}
-                <li className="nav-item menu-open">
-                  <a href="#" className="nav-link active">
-                    <i className="nav-icon fas fa-tachometer-alt" />
-                    <p>
-                      Dashboard
-                      <i className="right fas fa-angle-left" />
-                    </p>
-                  </a>
-                  <ul className="nav nav-treeview">
-                    <li className="nav-item">
-                      <a href="./index.html" className="nav-link active">
-                        <i className="far fa-circle nav-icon" />
-                        <p>Dashboard v1</p>
-                      </a>
-                    </li>
-                    <li className="nav-item">
-                      <a href="./index2.html" className="nav-link">
-                        <i className="far fa-circle nav-icon" />
-                        <p>Dashboard v2</p>
-                      </a>
-                    </li>
-                    <li className="nav-item">
-                      <a href="./index3.html" className="nav-link">
-                        <i className="far fa-circle nav-icon" />
-                        <p>Dashboard v3</p>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </nav>
-            {/* /.sidebar-menu */}
-          </div>
-          {/* /.sidebar */}
-        </aside>
-      </div>
-    </>
+          </CardBody>
+          <Card.Body>{`${userInfo.firstName || "User"} ${
+            userInfo.lastName || ""
+          }`}</Card.Body>
+          <Card.Body>Class: {userInfo.class || "N/A"}</Card.Body>
+          <Card.Body>Start Year: {userInfo.startYear || "N/A"}</Card.Body>
+          <Card.Body>Faculty: {userInfo.faculty || "N/A"}</Card.Body>
+        </Card>
+      </aside>
+    </div>
   );
 }
 
