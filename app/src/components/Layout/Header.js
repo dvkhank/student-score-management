@@ -24,7 +24,7 @@ function Header() {
           </li>
           <li className="nav-item d-none d-sm-inline-block">
             <a href="#" className="nav-link">
-              Contact
+              Claim for missing activities
             </a>
           </li>
         </ul>

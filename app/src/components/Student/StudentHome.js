@@ -14,8 +14,12 @@ import {
 import MySprinner from "../Commons/MySprinner";
 import { useNavigate } from "react-router-dom";
 import SideNav from "../Layout/SideNav";
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { useUser } from "../Auth/UserContext";
+
 function StudentHome() {
   const [kinds, setKinds] = useState(null);
+  const { userInfo } = useUser();
   const loadKinds = async () => {
     try {
       const res = await APIs.get(endpoints["kinds"]);
@@ -66,6 +70,33 @@ function StudentHome() {
   const loadMore = () => {
     if (!loading) {
       setPage((prevPage) => prevPage + 1);
+    }
+  };
+  const initialOptions = {
+    clientId:
+      "Abcp9NoTLYU0CLKasMOPPGEQGH2C9s0Ae823xkaOizodhCUCitKqTKdS21L7kRCk27XhaF4J9tzhaMhT",
+    currency: "USD",
+    intent: "capture",
+  };
+
+  const handleSuccessPayment = async (details, activity) => {
+    try {
+      const participationData = {
+        activityId: activity.id,
+        userId: userInfo.id,
+        parcipatedDate: new Date().toISOString().split("T")[0],
+        request: false,
+        description: "Payment successful",
+        evidence: details.id,
+      };
+
+      await APIs.post(
+        "http://localhost:8080/api/participation",
+        participationData
+      );
+      alert("Payment Successful and Participation recorded!");
+    } catch (error) {
+      console.error("Error saving participation", error);
     }
   };
   return (
@@ -152,14 +183,42 @@ function StudentHome() {
                                 Semester {a.period.semester} - Year{" "}
                                 {a.period.year}
                               </td>
-                              <td>{a.money === 0 ? "Free" : a.money}</td>
+                              <td>{a.money === 0 ? "Free" : a.money + " $"}</td>
                               <td>
                                 <Button className="btn btn-info mr-1">
                                   Details
                                 </Button>
-                                <Button className="btn btn-success">
-                                  Enroll
-                                </Button>
+                                {a.money !== 0 ? (
+                                  <PayPalScriptProvider
+                                    options={initialOptions}
+                                  >
+                                    <PayPalButtons
+                                      createOrder={(data, actions) => {
+                                        return actions.order.create({
+                                          purchase_units: [
+                                            {
+                                              amount: {
+                                                value: a.money.toString(),
+                                              },
+                                            },
+                                          ],
+                                        });
+                                      }}
+                                      onApprove={(data, actions) => {
+                                        return actions.order
+                                          .capture()
+                                          .then((details) => {
+                                            handleSuccessPayment(details, a); // Hàm xử lý thanh toán thành công
+                                          });
+                                      }}
+                                      disableFunding={["card"]}
+                                    />
+                                  </PayPalScriptProvider>
+                                ) : (
+                                  <Button className="btn btn-primary">
+                                    Enroll
+                                  </Button>
+                                )}
                               </td>
                             </tr>
                           ))}

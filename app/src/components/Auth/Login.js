@@ -3,12 +3,16 @@ import "../Auth/Style.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
 import axios from "axios";
+import { useUser } from "./UserContext";
+import { GoogleLogin } from "@react-oauth/google";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("Student");
   const navigate = useNavigate();
+
+  const { setUserInfo } = useUser();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,6 +33,28 @@ function Login() {
       console.error("Login failed:", error);
       alert("Login failed. Please check your credentials.");
     }
+  };
+  const handleGoogleLoginSuccess = async (response) => {
+    try {
+      const token = response.credential;
+      sessionStorage.setItem("token", token);
+
+      // Fetch user info from your backend using the token
+      const res = await axios.get("http://localhost:8080/api/userinfo", {
+        headers: { Authorization: token },
+      });
+      setUserInfo(res.data);
+
+      navigate("/student/");
+    } catch (error) {
+      console.error("Google login failed:", error);
+      alert("Google login failed. Please try again.");
+    }
+  };
+
+  const handleGoogleLoginFailure = (error) => {
+    console.error("Google login failed:", error);
+    alert("Google login failed. Please try again.");
   };
 
   return (
@@ -83,6 +109,13 @@ function Login() {
               Login
             </button>
           </div>
+          <div className="d-grid mt-3">
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onFailure={handleGoogleLoginFailure}
+            />
+          </div>
+
           <p className="text-right">
             <Link to={"/signup"}>Sign up</Link>
           </p>

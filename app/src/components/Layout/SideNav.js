@@ -1,30 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import MySprinner from "../Commons/MySprinner";
 import { Card, CardBody, ListGroup } from "react-bootstrap";
+import { useUser } from "../Auth/UserContext";
 
 function SideNav() {
-  const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-
-  const getUserInfo = async () => {
-    try {
-      const res = await axios.get("http://localhost:8080/api/userinfo", {
-        headers: { Authorization: sessionStorage.getItem("token") },
-      });
-      setUserInfo(res.data);
-    } catch (error) {
-      console.error("Failed to fetch user info", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    getUserInfo();
-  }, []);
-
+  const { userInfo, loading } = useUser();
+  console.log(userInfo);
+  console.log(loading);
   const handleLogout = () => {
     sessionStorage.removeItem("token"); // Remove token from sessionStorage
     navigate("/"); // Redirect to the login page
@@ -49,10 +33,14 @@ function SideNav() {
           <Card.Body>{`${userInfo.firstName || "User"} ${
             userInfo.lastName || ""
           }`}</Card.Body>
+          <CardBody>Email: {userInfo.email}</CardBody>
           <Card.Body>Class: {userInfo.class || "N/A"}</Card.Body>
           <Card.Body>Start Year: {userInfo.startYear || "N/A"}</Card.Body>
           <Card.Body>Faculty: {userInfo.faculty || "N/A"}</Card.Body>
         </Card>
+        <button onClick={handleLogout} className="btn btn-primary">
+          Logout
+        </button>
       </aside>
     </div>
   );

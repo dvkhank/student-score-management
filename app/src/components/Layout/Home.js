@@ -96,19 +96,12 @@ function Home() {
   return (
     <>
       <div>
-        {/* Content Wrapper. Contains page content */}
         <div className="content-wrapper">
-          {/* Content Header (Page header) */}
           <div className="content-header">
             <div className="container-fluid"></div>
-
-            {/* /.container-fluid */}
           </div>
-          {/* /.content-header */}
-          {/* Main content */}
           <section className="content">
             <div className="container-fluid">
-              {/* Small boxes (Stat box) */}
               {kinds === null ? (
                 <MySprinner />
               ) : (
@@ -146,8 +139,6 @@ function Home() {
                   </Col>
                 </Row>
               </Form>
-              {/* /.row */}
-              {/* Main row */}
               <Button onClick={addAnActivity} className="btn btn-primary mb-3">
                 Add an activity
               </Button>
@@ -215,11 +206,8 @@ function Home() {
                   )}
                 </div>
               </div>
-              {/* /.row (main row) */}
             </div>
-            {/* /.container-fluid */}
           </section>
-          {/* /.content */}
         </div>
       </div>
     </>

@@ -36,9 +36,7 @@ public class ApiLogin {
         String password = body.get("password");
         try {
             // Quá trình xác thực
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
-            );
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
             // Nếu xác thực thành công, tạo JWT token
             String token = jwtTokenProvider.generateToken(authentication);
@@ -48,6 +46,7 @@ public class ApiLogin {
             throw new RuntimeException("Invalid login credentials");
         }
     }
+
     @GetMapping("/userinfo")
     public ResponseEntity<?> getProfile(@RequestHeader("Authorization") String token) {
         // Xóa bỏ prefix "Bearer " nếu có
@@ -59,11 +58,12 @@ public class ApiLogin {
 
 
             Claims claims = jwtTokenProvider.getClaimsFromToken(token);
-            String id = claims.get("id",String.class);
+            String id = claims.get("id", String.class);
             String firstName = claims.get("firstName", String.class);
             String lastName = claims.get("lastName", String.class);
             String avatar = claims.get("avatar", String.class);
             String role = claims.get("role", String.class);
+            String email = claims.get("email", String.class);
             // Tạo đối tượng phản hồi với thông tin người dùng
             Map<String, Object> response = new HashMap<>();
             response.put("id", id);
@@ -71,9 +71,10 @@ public class ApiLogin {
             response.put("lastName", lastName);
             response.put("avatar", avatar);
             response.put("role", role);
+            response.put("email", email);
 
             //IF Role la Sinh vien
-            if(role.equals("student")) {
+            if (role.equals("student")) {
                 Student st = studentService.getStudentByUserId(Long.valueOf(id));
 
                 response.put("class", st.getClassField().getName());
@@ -86,4 +87,6 @@ public class ApiLogin {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
     }
+
+
 }
