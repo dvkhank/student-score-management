@@ -13,6 +13,7 @@ import {
 import MySprinner from "../Commons/MySprinner";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import SideNav from "./SideNav";
 function Home() {
   const [kinds, setKinds] = useState(null);
   const loadKinds = async () => {
@@ -95,6 +96,8 @@ function Home() {
 
   return (
     <>
+      <SideNav></SideNav>
+
       <div>
         <div className="content-wrapper">
           <div className="content-header">

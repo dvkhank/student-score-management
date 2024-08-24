@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz ->
                         authz
                                 .requestMatchers("/", "/api/**").permitAll() // Cho phép truy cập không yêu cầu xác thực
-                                .requestMatchers("/admin/**").hasAuthority("ADMIN") // Yêu cầu quyền ADMIN cho đường dẫn /admin/**
+                                .requestMatchers("/admin/**").hasAuthority("admin")
                                 .anyRequest().authenticated() // Các yêu cầu khác yêu cầu xác thực
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

@@ -7,8 +7,6 @@ import { useUser } from "../Auth/UserContext";
 function SideNav() {
   const navigate = useNavigate();
   const { userInfo, loading } = useUser();
-  console.log(userInfo);
-  console.log(loading);
   const handleLogout = () => {
     sessionStorage.removeItem("token"); // Remove token from sessionStorage
     navigate("/"); // Redirect to the login page
@@ -34,9 +32,13 @@ function SideNav() {
             userInfo.lastName || ""
           }`}</Card.Body>
           <CardBody>Email: {userInfo.email}</CardBody>
-          <Card.Body>Class: {userInfo.class || "N/A"}</Card.Body>
-          <Card.Body>Start Year: {userInfo.startYear || "N/A"}</Card.Body>
-          <Card.Body>Faculty: {userInfo.faculty || "N/A"}</Card.Body>
+          {userInfo.role === "student" && (
+            <>
+              <CardBody>Class: {userInfo.class || "N/A"}</CardBody>
+              <CardBody>Start Year: {userInfo.startYear || "N/A"}</CardBody>
+              <CardBody>Faculty: {userInfo.faculty || "N/A"}</CardBody>
+            </>
+          )}
         </Card>
         <button onClick={handleLogout} className="btn btn-primary">
           Logout

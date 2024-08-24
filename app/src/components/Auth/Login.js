@@ -5,6 +5,7 @@ import { Button, Form } from "react-bootstrap";
 import axios from "axios";
 import { useUser } from "./UserContext";
 import { GoogleLogin } from "@react-oauth/google";
+import SideNav from "../Layout/SideNav";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -27,7 +28,7 @@ function Login() {
       if (role === "Student") {
         navigate("/student/");
       } else {
-        navigate("/admin-dashboard");
+        navigate("/admin");
       }
     } catch (error) {
       console.error("Login failed:", error);
@@ -40,7 +41,7 @@ function Login() {
       sessionStorage.setItem("token", token);
 
       // Fetch user info from your backend using the token
-      const res = await axios.get("http://localhost:8080/api/userinfo", {
+      const res = await axios.get("http://localhost:8080/api/googleTokenInfo", {
         headers: { Authorization: token },
       });
       setUserInfo(res.data);
