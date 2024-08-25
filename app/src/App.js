@@ -13,6 +13,7 @@ import StudentHome from "./components/Student/StudentHome";
 import { useEffect, useState } from "react";
 import { UserProvider } from "./components/Auth/UserContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import PrivateRoute from "./components/Auth/PrivateRoute";
 
 function App() {
   return (

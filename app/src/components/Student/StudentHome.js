@@ -16,6 +16,9 @@ import { useNavigate } from "react-router-dom";
 import SideNav from "../Layout/SideNav";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useUser } from "../Auth/UserContext";
+import axios from "axios";
+import { gapi } from "gapi-script";
+import Chat from "../Firebase/Chat";
 
 function StudentHome() {
   const [kinds, setKinds] = useState(null);
@@ -86,6 +89,7 @@ function StudentHome() {
         userId: userInfo.id,
         parcipatedDate: new Date().toISOString().split("T")[0],
         request: false,
+        active: true,
         description: "Payment successful",
         evidence: details.id,
       };
@@ -99,6 +103,7 @@ function StudentHome() {
       console.error("Error saving participation", error);
     }
   };
+
   return (
     <>
       <SideNav></SideNav>
@@ -235,6 +240,7 @@ function StudentHome() {
                     </>
                   )}
                 </div>
+                <Chat /> {/* Add Chat component here */}
               </div>
             </div>
           </section>

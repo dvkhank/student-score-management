@@ -5,14 +5,13 @@ import { Button, Form } from "react-bootstrap";
 import axios from "axios";
 import { useUser } from "./UserContext";
 import { GoogleLogin } from "@react-oauth/google";
-import SideNav from "../Layout/SideNav";
-
+import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
+import { auth } from "../Firebase/firebase"; // Nhập auth từ firebase.js
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("Student");
   const navigate = useNavigate();
-
   const { setUserInfo } = useUser();
 
   const handleSubmit = async (e) => {
@@ -39,7 +38,11 @@ function Login() {
     try {
       const token = response.credential;
       sessionStorage.setItem("token", token);
-
+      // Sign in with Google token FIREBASE
+      // Sign in with Google token FIREBASE
+      const credential = GoogleAuthProvider.credential(token);
+      await signInWithCredential(auth, credential);
+      const user = auth.currentUser;
       // Fetch user info from your backend using the token
       const res = await axios.get("http://localhost:8080/api/googleTokenInfo", {
         headers: { Authorization: token },
@@ -58,6 +61,7 @@ function Login() {
     alert("Google login failed. Please try again.");
   };
 
+  const scopes = "https://www.googleapis.com/auth/calendar";
   return (
     <div className="login template d-flex justify-content-center align-items-center 100-vh bg-primary">
       <div className="form_container p-5 rounded bg-white">
