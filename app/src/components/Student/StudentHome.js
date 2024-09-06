@@ -17,8 +17,6 @@ import SideNav from "../Layout/SideNav";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useUser } from "../Auth/UserContext";
 import axios from "axios";
-import { gapi } from "gapi-script";
-import Chat from "../Firebase/Chat";
 
 function StudentHome() {
   const [kinds, setKinds] = useState(null);
@@ -32,38 +30,58 @@ function StudentHome() {
       console.error("Something wrong");
     }
   };
-
+  const [periods, setPeriods] = useState([]);
   const [page, setPage] = useState(1);
   const [activityKindId, setActivityKindId] = useState("");
   const [keyword, setKeyword] = useState("");
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedPeriod, setSelectedPeriod] = useState("");
+  const handlePeriodChange = (event) => {
+    const periodId = event.target.value;
+    setSelectedPeriod(periodId);
+  };
   const loadActivities = async () => {
     setLoading(true);
     try {
-      let url = `${endpoints["activities"]}?keyword=${keyword}&page=${page}`;
+      // Lấy userInfo từ sessionStorage và phân tích chuỗi JSON
+      const userInfoString = sessionStorage.getItem("userInfo");
+      if (!userInfoString) {
+        throw new Error("User info not found in session storage");
+      }
+      const userInfo = JSON.parse(userInfoString);
+      if (!userInfo || !userInfo.userId) {
+        throw new Error("User info or userId is missing");
+      }
+      console.log(typeof userInfo.userId); // Kiểm tra kiểu dữ liệu
+
+      // Tạo URL với tham số userId
+      let url = `${endpoints["activities"]}?keyword=${keyword}&page=${page}&periodId=${selectedPeriod}&userId=${userInfo.userId}`;
 
       if (activityKindId) {
         url = `${url}&activityKindId=${activityKindId}`;
       }
+
+      // Gọi API
       const res = await APIs.get(url);
-      if (page === 1) setActivities(res.data);
-      else
-        setActivities((current) => {
-          return [...current, ...res.data];
-        });
+      if (page === 1) {
+        setActivities(res.data);
+      } else {
+        setActivities((current) => [...current, ...res.data]);
+      }
     } catch (ex) {
-      console.error(ex);
+      console.error("Failed to load activities:", ex.message);
     } finally {
       setLoading(false);
     }
   };
   useEffect(() => {
     loadActivities();
-  }, [keyword, activityKindId, page]);
+  }, [keyword, activityKindId, page, selectedPeriod]);
 
   useEffect(() => {
     loadKinds();
+    loadPeriods();
   }, []);
   const navigator = useNavigate();
   const searchKind = (e, activityKindId) => {
@@ -81,12 +99,22 @@ function StudentHome() {
     currency: "USD",
     intent: "capture",
   };
+  const loadPeriods = async () => {
+    try {
+      const res = await APIs.get(endpoints["periods"]);
+      setPeriods(res.data);
+    } catch {
+      console.log("Loi roi");
+    }
+  };
 
   const handleSuccessPayment = async (details, activity) => {
+    setLoading(true); // Bắt đầu tải khi thanh toán thành công
+
     try {
       const participationData = {
         activityId: activity.id,
-        userId: userInfo.id,
+        userId: userInfo.userId,
         parcipatedDate: new Date().toISOString().split("T")[0],
         request: false,
         active: true,
@@ -99,8 +127,11 @@ function StudentHome() {
         participationData
       );
       alert("Payment Successful and Participation recorded!");
+      loadActivities();
     } catch (error) {
       console.error("Error saving participation", error);
+    } finally {
+      setLoading(false); // Kết thúc tải khi hoàn tất
     }
   };
 
@@ -136,6 +167,24 @@ function StudentHome() {
                           ))}
                         </Nav>
                       </Navbar.Collapse>
+                      <Form.Group>
+                        <Form.Label htmlFor="period-select">
+                          Chọn học kỳ:
+                        </Form.Label>
+                        <Form.Select
+                          id="period-select"
+                          value={selectedPeriod}
+                          onChange={handlePeriodChange}
+                        >
+                          <option value="">-- Chọn một kỳ --</option>
+                          {/* Bước 3: Hiển thị các options từ periods */}
+                          {periods.map((period) => (
+                            <option key={period.id} value={period.id}>
+                              Học kì: {period.semester} - Năm học: {period.year}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
                     </Container>
                   </Navbar>
                 </>
@@ -170,6 +219,7 @@ function StudentHome() {
                             <th>Score</th>
                             <th>Kind</th>
                             <th>Faculty</th>
+                            <th>Date</th>
                             <th>Period</th>
                             <th>Money</th>
                             <th>Action</th>
@@ -184,6 +234,7 @@ function StudentHome() {
                               <td>{a.score}</td>
                               <td>{a.activityKind.id}</td>
                               <td>{a.faculty.name}</td>
+                              <td>{a.startDate}</td>
                               <td>
                                 Semester {a.period.semester} - Year{" "}
                                 {a.period.year}
@@ -240,7 +291,6 @@ function StudentHome() {
                     </>
                   )}
                 </div>
-                <Chat /> {/* Add Chat component here */}
               </div>
             </div>
           </section>

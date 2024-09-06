@@ -31,6 +31,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         participationId.setActivityId(participationCreation.getActivityId());
         participationId.setStudentId(student.getId());
         Participation participation = new Participation();
+        participation.setActive(participationCreation.getActive());
         participation.setId(participationId);
         participation.setActivity(activityRepository.getOne(participationCreation.getActivityId()));
         participation.setStudent(student);

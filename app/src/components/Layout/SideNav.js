@@ -3,14 +3,22 @@ import { useEffect, useState } from "react";
 import MySprinner from "../Commons/MySprinner";
 import { Card, CardBody, ListGroup } from "react-bootstrap";
 import { useUser } from "../Auth/UserContext";
-
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 function SideNav() {
+  const supabase = useSupabaseClient();
   const navigate = useNavigate();
-  const { userInfo, loading } = useUser();
-  const handleLogout = () => {
-    sessionStorage.removeItem("token"); // Remove token from sessionStorage
-    navigate("/"); // Redirect to the login page
-  };
+  const { userInfo, setUserInfo, loading } = useUser();
+  async function signOut() {
+    await supabase.auth.signOut();
+    navigate("/");
+  }
+  useEffect(() => {
+    // Khôi phục thông tin người dùng từ sessionStorage
+    const storedUserInfo = sessionStorage.getItem("userInfo");
+    if (storedUserInfo) {
+      setUserInfo(JSON.parse(storedUserInfo));
+    }
+  }, []);
   if (loading) {
     return <MySprinner />;
   }
@@ -40,7 +48,7 @@ function SideNav() {
             </>
           )}
         </Card>
-        <button onClick={handleLogout} className="btn btn-primary">
+        <button onClick={signOut} className="btn btn-primary">
           Logout
         </button>
       </aside>

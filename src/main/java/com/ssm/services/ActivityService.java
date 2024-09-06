@@ -12,4 +12,5 @@ public interface ActivityService {
     public Optional<Activity> getActivityById(Long id);
     public void deleteActivityById(Long id);
     public List<Activity> getActivities(Map<String, String> params);
+    public List<Activity> getActivitiesByStudent(Map<String, String> params);
 }

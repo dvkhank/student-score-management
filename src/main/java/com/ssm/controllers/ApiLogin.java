@@ -1,9 +1,5 @@
 package com.ssm.controllers;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.ssm.JwtTokenProvider;
 import com.ssm.models.Student;
 import com.ssm.models.User;
@@ -19,9 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,51 +93,39 @@ public class ApiLogin {
     }
 
 
-    @GetMapping("/googleTokenInfo")
-    public ResponseEntity<?> getGoogleTokenInfo(@RequestHeader("Authorization") String token) {
-        // Xóa bỏ prefix "Bearer " nếu có
-        if (token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
-                .setAudience(Collections.singletonList("984920663519-3toq3our7t7o1ksjkjtshb33vdrptd03.apps.googleusercontent.com")) // Thay YOUR_CLIENT_ID bằng Client ID của bạn
-                .setIssuer("https://accounts.google.com") // Xác minh Issuer là Google
-                .build();
-
+    @GetMapping("/userInfoEmail")
+    public ResponseEntity<?> getUserInfoByEmail(@RequestParam String email) {
         try {
-            GoogleIdToken idToken = verifier.verify(token);
-            if (idToken != null) {
-                GoogleIdToken.Payload payload = idToken.getPayload();
+            User user = userRepository.findByEmail(email);
 
-                String userId = payload.getSubject();
-                String email = payload.getEmail();
-                User user = userRepository.findByEmail(email);
-                // Tạo đối tượng phản hồi với thông tin người dùng
-                Map<String, Object> response = new HashMap<>();
-                response.put("userId", userId);
-                response.put("email", email);
-                response.put("avatar", user.getAvatar());
-                response.put("lastName", user.getLastname());
-                response.put("firstName", user.getFirstname());
-                if(user.getRole().equals("student")) {
-                    Student student = studentService.getStudentByUserId(Long.valueOf(user.getId()));
-                    response.put("class", student.getClassField().getName());
-                    response.put("startYear", student.getClassField().getStartYear());
-                    response.put("faculty", student.getClassField().getFaculty().getName());
-                    response.put("role", "student");
-                }
-                else {
-                    response.put("role", "admin");
-                }
-                return ResponseEntity.ok(response);
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid ID token");
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
             }
-        } catch (GeneralSecurityException | IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error verifying token");
+
+            // Tạo đối tượng phản hồi với thông tin người dùng
+            Map<String, Object> response = new HashMap<>();
+            response.put("userId", user.getId());
+            response.put("email", email);
+            response.put("avatar", user.getAvatar());
+            response.put("lastName", user.getLastname());
+            response.put("firstName", user.getFirstname());
+
+            if ("student".equals(user.getRole())) {
+                Student student = studentService.getStudentByUserId(Long.valueOf(user.getId()));
+                response.put("class", student.getClassField().getName());
+                response.put("startYear", student.getClassField().getStartYear());
+                response.put("faculty", student.getClassField().getFaculty().getName());
+                response.put("role", "student");
+            } else {
+                response.put("role", "admin");
+            }
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request");
         }
     }
+
 
 
 

@@ -23,6 +23,10 @@ public class ApiActivityController {
     public List<Activity> getActivities(@RequestParam Map<String, String> params) {
         return activityService.getActivities(params);
     }
+    @GetMapping("/studentactivities")
+    public List<Activity> getStudentActivities(@RequestParam Map<String, String> params) {
+        return activityService.getActivitiesByStudent(params);
+    }
 
     @PostMapping("/add-activity")
     public ResponseEntity addActivity(@Valid @RequestBody Activity activity, BindingResult bindingResult) {

@@ -35,6 +35,10 @@ public class Participation {
     @Column(name = "description", length = 200)
     private String description;
 
+    @ColumnDefault("0")
+    @Column(name = "active")
+    private Boolean active;
+
     @Column(name = "evidence", length = 200)
     private String evidence;
 
