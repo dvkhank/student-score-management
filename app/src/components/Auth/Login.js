@@ -13,7 +13,6 @@ function Login() {
   const navigate = useNavigate();
   const { setUserInfo } = useUser();
   const supabase = useSupabaseClient();
-  const session = useSession();
 
   async function googleSignIn() {
     try {
@@ -69,7 +68,6 @@ function Login() {
               }
             );
             sessionStorage.setItem("userInfo", JSON.stringify(res.data));
-
             console.log(res.data);
 
             // Cập nhật thông tin người dùng
@@ -181,18 +179,9 @@ function Login() {
           </p>
         </form>
         <div className="d-grid mt-3">
-          {session ? (
-            <>
-              <h2>Hiiii {session.user.email}</h2>
-              <button onClick={() => signOut()}>SIGN OUT</button>
-            </>
-          ) : (
-            <>
-              <button className="btn btn-info" onClick={googleSignIn}>
-                SIGN IN WITH GOOGLE
-              </button>
-            </>
-          )}
+          <button className="btn btn-info" onClick={googleSignIn}>
+            SIGN IN WITH GOOGLE
+          </button>
         </div>
       </div>
     </div>

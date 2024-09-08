@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import APIs, { endpoints } from "../../configs/APIs";
+import { useSession } from "@supabase/auth-helpers-react";
 import {
   Col,
   Container,
@@ -17,8 +18,10 @@ import SideNav from "../Layout/SideNav";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useUser } from "../Auth/UserContext";
 import axios from "axios";
+import { Alert } from "bootstrap";
 
 function StudentHome() {
+  const session = useSession();
   const [kinds, setKinds] = useState(null);
   const { userInfo } = useUser();
   const loadKinds = async () => {
@@ -126,7 +129,40 @@ function StudentHome() {
         "http://localhost:8080/api/participation",
         participationData
       );
-      alert("Payment Successful and Participation recorded!");
+      const event = {
+        summary: activity.name,
+        description: activity.description,
+        start: {
+          dateTime: new Date(activity.startDate).toISOString(), // Chuyển đổi startDate sang định dạng ISO
+          timeZone: "Asia/Ho_Chi_Minh",
+        },
+        end: {
+          dateTime: new Date(
+            new Date(activity.startDate).getTime() + 60 * 60 * 1000
+          ).toISOString(), // Giả sử sự kiện kéo dài 1 giờ
+          timeZone: "Asia/Ho_Chi_Minh",
+        },
+      };
+
+      // Gọi API Google Calendar để tạo sự kiện
+      const res = await fetch(
+        "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${session.provider_token}`, // Gửi access token
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(event), // Gửi dữ liệu sự kiện
+        }
+      );
+      if (res.ok) {
+        alert("Tạo sự kiện thành công!"); // Thông báo thành công
+      } else {
+        const errorResponse = await res.json();
+        console.error("Lỗi khi tạo sự kiện:", errorResponse);
+        alert("Không thể tạo sự kiện trên Google Calendar.");
+      }
       loadActivities();
     } catch (error) {
       console.error("Error saving participation", error);
@@ -134,7 +170,63 @@ function StudentHome() {
       setLoading(false); // Kết thúc tải khi hoàn tất
     }
   };
+  const handleEnroll = async (activity) => {
+    try {
+      // Tạo dữ liệu sự kiện
+      const event = {
+        summary: activity.name,
+        description: activity.description,
+        start: {
+          dateTime: new Date(activity.startDate).toISOString(), // Chuyển đổi startDate sang định dạng ISO
+          timeZone: "Asia/Ho_Chi_Minh",
+        },
+        end: {
+          dateTime: new Date(
+            new Date(activity.startDate).getTime() + 60 * 60 * 1000
+          ).toISOString(), // Giả sử sự kiện kéo dài 1 giờ
+          timeZone: "Asia/Ho_Chi_Minh",
+        },
+      };
 
+      // Gọi API Google Calendar để tạo sự kiện
+      const res = await fetch(
+        "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${session.provider_token}`, // Gửi access token
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(event), // Gửi dữ liệu sự kiện
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        const participationData = {
+          activityId: activity.id,
+          userId: userInfo.userId,
+          parcipatedDate: new Date().toISOString().split("T")[0],
+          request: false,
+          active: true,
+          description: "Enroll successful",
+        };
+        // Gửi dữ liệu về backend
+        await APIs.post(
+          "http://localhost:8080/api/participation",
+          participationData
+        );
+        alert("Sự kiện đã được đăng kí thành công trên Google Calendar!");
+        loadActivities();
+      } else {
+        const error = await res.json();
+        console.error("Lỗi khi tạo sự kiện:", error);
+        alert("Không thể tạo sự kiện, vui lòng thử lại.");
+      }
+    } catch (error) {
+      console.error("Lỗi khi tạo sự kiện:", error);
+    }
+  };
   return (
     <>
       <SideNav></SideNav>
@@ -271,7 +363,10 @@ function StudentHome() {
                                     />
                                   </PayPalScriptProvider>
                                 ) : (
-                                  <Button className="btn btn-primary">
+                                  <Button
+                                    onClick={() => handleEnroll(a)} // Thêm sự kiện khi ấn nút Enroll
+                                    className="btn btn-primary"
+                                  >
                                     Enroll
                                   </Button>
                                 )}
