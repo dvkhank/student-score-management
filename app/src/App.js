@@ -1,5 +1,4 @@
 import "./App.css";
-import Header from "./components/Layout/Header";
 import Footer from "./components/Layout/Footer";
 import Home from "./components/Layout/Home";
 import SideNav from "./components/Layout/SideNav";
@@ -18,7 +17,6 @@ function App() {
   return (
     <UserProvider>
       <BrowserRouter>
-        <Header />
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

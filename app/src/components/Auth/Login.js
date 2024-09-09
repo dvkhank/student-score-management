@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "../Auth/Style.css";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Form } from "react-bootstrap";
-import axios from "axios";
+import { Form } from "react-bootstrap";
 import { useUser } from "./UserContext";
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { endpoints } from "../../configs/APIs";
+import APIs from "../../configs/APIs";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -61,12 +62,9 @@ function Login() {
         const user = userData.user;
         if (user && user.email) {
           try {
-            const res = await axios.get(
-              "http://localhost:8080/api/userInfoEmail",
-              {
-                params: { email: user.email },
-              }
-            );
+            const res = await APIs.get(endpoints["user_email"], {
+              params: { email: user.email },
+            });
             sessionStorage.setItem("userInfo", JSON.stringify(res.data));
             console.log(res.data);
 
@@ -105,7 +103,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/login", {
+      const response = await APIs.post(endpoints["login"], {
         username,
         password,
       });

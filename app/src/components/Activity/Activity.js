@@ -68,7 +68,7 @@ const Activity = () => {
     };
 
     try {
-      await axios.post("http://localhost:8080/api/add-activity", activityData);
+      await axios.post(endpoints["add_activities"], activityData);
       console.log("Activity Data:", activityData);
       alert("Activity created successfully!");
       setErrors({});

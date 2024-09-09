@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
+import APIs, { endpoints } from "../../configs/APIs";
 
 const UserContext = createContext();
 
@@ -14,7 +14,7 @@ export const UserProvider = ({ children }) => {
       return;
     }
     try {
-      const res = await axios.get("http://localhost:8080/api/userinfo", {
+      const res = await APIs.get(endpoints["user_token"], {
         headers: { Authorization: sessionStorage.getItem("token") },
       });
       setUserInfo(res.data);

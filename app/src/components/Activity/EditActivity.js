@@ -47,7 +47,7 @@ const EditActivity = () => {
 
   const loadActivityData = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/api/activities/${id}`);
+      const res = await axios.get(`${endpoints["activities"]}/${id}`);
       setFormData({
         name: res.data.name,
         description: res.data.description,
@@ -87,10 +87,7 @@ const EditActivity = () => {
     };
 
     try {
-      await axios.put(
-        `http://localhost:8080/api/activities/${id}`,
-        activityData
-      );
+      await axios.put(`${endpoints["activities"]}/${id}`, activityData);
       console.log("Activity Data:", activityData);
       alert("Activity updated successfully!");
       setErrors({});

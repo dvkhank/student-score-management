@@ -5,9 +5,10 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { createClient } from "@supabase/supabase-js";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
+
 const supabase = createClient(
-  "https://wskbzrgavbinkjdjlfbt.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indza2J6cmdhdmJpbmtqZGpsZmJ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQ1MTc2NzYsImV4cCI6MjA0MDA5MzY3Nn0.OzkrJ5As7OM5gSGDzeBc7FYCbOTa_ap2kW3JQU0Ax8U"
+  process.env.REACT_APP_URL_SUPABASE,
+  process.env.REACT_APP_API_SUPABASE
 );
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

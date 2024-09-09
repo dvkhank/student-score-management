@@ -11,14 +11,14 @@ import {
   Row,
   Table,
   Button,
+  Spinner,
 } from "react-bootstrap";
 import MySprinner from "../Commons/MySprinner";
 import { useNavigate } from "react-router-dom";
 import SideNav from "../Layout/SideNav";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useUser } from "../Auth/UserContext";
-import axios from "axios";
-import { Alert } from "bootstrap";
+import Header from "../Layout/Header";
 
 function StudentHome() {
   const session = useSession();
@@ -97,8 +97,7 @@ function StudentHome() {
     }
   };
   const initialOptions = {
-    clientId:
-      "Abcp9NoTLYU0CLKasMOPPGEQGH2C9s0Ae823xkaOizodhCUCitKqTKdS21L7kRCk27XhaF4J9tzhaMhT",
+    clientId: process.env.REACT_APP_CLIENTID_PAYPAL,
     currency: "USD",
     intent: "capture",
   };
@@ -125,10 +124,8 @@ function StudentHome() {
         evidence: details.id,
       };
 
-      await APIs.post(
-        "http://localhost:8080/api/participation",
-        participationData
-      );
+      await APIs.post(endpoints["add_participation"], participationData);
+
       const event = {
         summary: activity.name,
         description: activity.description,
@@ -172,6 +169,7 @@ function StudentHome() {
   };
   const handleEnroll = async (activity) => {
     try {
+      setLoading(true);
       // Tạo dữ liệu sự kiện
       const event = {
         summary: activity.name,
@@ -212,10 +210,7 @@ function StudentHome() {
           description: "Enroll successful",
         };
         // Gửi dữ liệu về backend
-        await APIs.post(
-          "http://localhost:8080/api/participation",
-          participationData
-        );
+        await APIs.post(endpoints["add_participation"], participationData);
         alert("Sự kiện đã được đăng kí thành công trên Google Calendar!");
         loadActivities();
       } else {
@@ -225,17 +220,19 @@ function StudentHome() {
       }
     } catch (error) {
       console.error("Lỗi khi tạo sự kiện:", error);
+    } finally {
+      setLoading(false);
     }
   };
   return (
     <>
-      <SideNav></SideNav>
+      <SideNav />
+      <>{session.user && session.user.id ? <Header /> : <Spinner />}</>
+
       <div>
         <div className="content-wrapper">
           <div className="content-header">
-            <div className="container-fluid">
-              <h1 className="text-info">HELLO SINH VIEN</h1>
-            </div>
+            <div className="container-fluid"></div>
           </div>
           <section className="content">
             <div className="container-fluid">

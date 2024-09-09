@@ -77,7 +77,7 @@ function Home() {
       return;
     }
     try {
-      await axios.delete(`http://localhost:8080/api/activities/${id}`);
+      await axios.delete(`${endpoints["activities"]}/${id}`);
       alert("Activity deleted successfully");
       loadActivities(); // Reload the activities list
     } catch (err) {
