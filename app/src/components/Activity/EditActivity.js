@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import APIs, { endpoints } from "../../configs/APIs";
-import axios from "axios";
 import { useParams } from "react-router-dom"; // Để lấy ID từ URL
 
 const EditActivity = () => {
@@ -47,7 +46,7 @@ const EditActivity = () => {
 
   const loadActivityData = async () => {
     try {
-      const res = await axios.get(`${endpoints["activities"]}/${id}`);
+      const res = await APIs.get(`${endpoints["admin_activities"]}/${id}`);
       setFormData({
         name: res.data.name,
         description: res.data.description,
@@ -87,7 +86,7 @@ const EditActivity = () => {
     };
 
     try {
-      await axios.put(`${endpoints["activities"]}/${id}`, activityData);
+      await APIs.put(`${endpoints["admin_activities"]}/${id}`, activityData);
       console.log("Activity Data:", activityData);
       alert("Activity updated successfully!");
       setErrors({});

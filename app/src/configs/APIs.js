@@ -4,6 +4,7 @@ const BASE_URL = "http://localhost:8080/api/";
 
 export const endpoints = {
   activities: "studentactivities",
+  admin_activities: "activities",
   kinds: "kinds",
   faculties: "faculties",
   periods: "periods",

@@ -35,7 +35,7 @@ function Home() {
   const loadActivities = async () => {
     setLoading(true);
     try {
-      let url = `${endpoints["activities"]}?keyword=${keyword}&page=${page}`;
+      let url = `${endpoints["admin_activities"]}?keyword=${keyword}&page=${page}`;
 
       if (activityKindId) {
         url = `${url}&activityKindId=${activityKindId}`;
@@ -62,10 +62,10 @@ function Home() {
   const navigator = useNavigate();
 
   function addAnActivity() {
-    navigator("/add-activity");
+    navigator("/admin/add-activity");
   }
   const editActivity = (id) => {
-    navigator(`/edit-activity/${id}`);
+    navigator(`/admin/edit-activity/${id}`);
   };
 
   const deleteActivity = async (id) => {
@@ -77,7 +77,7 @@ function Home() {
       return;
     }
     try {
-      await axios.delete(`${endpoints["activities"]}/${id}`);
+      await axios.delete(`${endpoints["admin_activities"]}/${id}`);
       alert("Activity deleted successfully");
       loadActivities(); // Reload the activities list
     } catch (err) {

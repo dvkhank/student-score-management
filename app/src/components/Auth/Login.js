@@ -109,6 +109,16 @@ function Login() {
       });
       const token = response.data; // Assuming token is returned as plain string
       sessionStorage.setItem("token", token);
+      try {
+        const res = await APIs.get(endpoints["user_token"], {
+          headers: { Authorization: sessionStorage.getItem("token") },
+        });
+        setUserInfo(res.data);
+        sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+      } catch (error) {
+        console.error("Failed to fetch user info", error);
+      }
+
       // Redirect based on role
       if (role === "Student") {
         navigate("/student/");
@@ -167,7 +177,11 @@ function Login() {
             </label>
           </div>
           <div className="d-grid">
-            <button type="submit" className="btn btn-primary">
+            <button
+              onClick={handleSubmit}
+              type="submit"
+              className="btn btn-primary"
+            >
               Login
             </button>
           </div>

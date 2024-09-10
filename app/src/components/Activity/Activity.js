@@ -68,7 +68,7 @@ const Activity = () => {
     };
 
     try {
-      await axios.post(endpoints["add_activities"], activityData);
+      await APIs.post(endpoints["add_activities"], activityData);
       console.log("Activity Data:", activityData);
       alert("Activity created successfully!");
       setErrors({});

@@ -8,6 +8,7 @@ export const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const getUserInfo = async () => {
+    sessionStorage.clear();
     const token = sessionStorage.getItem("token");
     if (!token) {
       setLoading(false);
