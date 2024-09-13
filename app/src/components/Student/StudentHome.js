@@ -18,7 +18,8 @@ import { useNavigate } from "react-router-dom";
 import SideNav from "../Layout/SideNav";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useUser } from "../Auth/UserContext";
-import Header from "../Layout/Header";
+import Header from "../Layout/StudentHeader";
+import StudentHeader from "../Layout/StudentHeader";
 
 function StudentHome() {
   const session = useSession();
@@ -46,6 +47,7 @@ function StudentHome() {
   };
   const loadActivities = async () => {
     setLoading(true);
+
     try {
       // Lấy userInfo từ sessionStorage và phân tích chuỗi JSON
       const userInfoString = sessionStorage.getItem("userInfo");
@@ -206,7 +208,7 @@ function StudentHome() {
           userId: userInfo.userId,
           parcipatedDate: new Date().toISOString().split("T")[0],
           request: false,
-          active: true,
+          active: false,
           description: "Enroll successful",
         };
         // Gửi dữ liệu về backend
@@ -227,7 +229,7 @@ function StudentHome() {
   return (
     <>
       <SideNav />
-      <>{session.user && session.user.id ? <Header /> : <Spinner />}</>
+      <>{session.user && session.user.id ? <StudentHeader /> : <Spinner />}</>
 
       <div>
         <div className="content-wrapper">
@@ -258,18 +260,18 @@ function StudentHome() {
                       </Navbar.Collapse>
                       <Form.Group>
                         <Form.Label htmlFor="period-select">
-                          Chọn học kỳ:
+                          Choose a period:
                         </Form.Label>
                         <Form.Select
                           id="period-select"
                           value={selectedPeriod}
                           onChange={handlePeriodChange}
                         >
-                          <option value="">-- Chọn một kỳ --</option>
+                          <option value="">-- Choose a period --</option>
                           {/* Bước 3: Hiển thị các options từ periods */}
                           {periods.map((period) => (
                             <option key={period.id} value={period.id}>
-                              Học kì: {period.semester} - Năm học: {period.year}
+                              Semester: {period.semester} - Year: {period.year}
                             </option>
                           ))}
                         </Form.Select>

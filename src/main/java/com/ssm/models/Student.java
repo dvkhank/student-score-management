@@ -1,8 +1,12 @@
 package com.ssm.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -10,6 +14,7 @@ import lombok.Setter;
 @Table(name = "students")
 public class Student {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -20,5 +25,9 @@ public class Student {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id")
     private Class classField;
+
+    @OneToMany(mappedBy = "student")
+    @JsonIgnore // Ngăn vòng lặp JSON ở đây
+    private Set<Participation> participations = new LinkedHashSet<>();
 
 }

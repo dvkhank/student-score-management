@@ -1,5 +1,6 @@
 package com.ssm.configs;
 
+import com.cloudinary.Cloudinary;
 import com.ssm.security.JwtAuthenticationFilter;
 import com.ssm.services.impl.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -48,5 +52,14 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+    @Bean
+    public Cloudinary cloudinary() {
+        Map<String, Object> config = new HashMap<>();
+        config.put("cloud_name", "dfs6qhtdp");
+        config.put("api_key", "783287636326811");
+        config.put("api_secret", "I5yF-_c9P7bfo4rLhwoolpZ6kUE");
+        config.put("secure", true);
+        return new Cloudinary(config);
     }
 }

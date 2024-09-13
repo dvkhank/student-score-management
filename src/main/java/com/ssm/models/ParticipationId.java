@@ -2,6 +2,7 @@ package com.ssm.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
@@ -13,9 +14,11 @@ import java.util.Objects;
 @Embeddable
 public class ParticipationId implements java.io.Serializable {
     private static final long serialVersionUID = -2393039559739779767L;
+    @NotNull
     @Column(name = "student_id", nullable = false)
     private Long studentId;
 
+    @NotNull
     @Column(name = "activity_id", nullable = false)
     private Long activityId;
 

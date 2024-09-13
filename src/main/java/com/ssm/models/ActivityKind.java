@@ -1,11 +1,13 @@
 package com.ssm.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,13 +15,19 @@ import lombok.Setter;
 @Table(name = "activity_kinds")
 public class ActivityKind {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Size(max = 200)
     @Column(name = "description", length = 200)
     private String description;
 
     @Column(name = "max_score")
     private Integer maxScore;
+
+    @OneToMany(mappedBy = "activityKind")
+    @JsonIgnore // Ngăn vòng lặp JSON ở đây
+    private Set<Activity> activities = new LinkedHashSet<>();
 
 }

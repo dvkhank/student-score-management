@@ -1,11 +1,12 @@
 package com.ssm.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Table(name = "periods")
 public class Period {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -21,5 +23,9 @@ public class Period {
 
     @Column(name = "year")
     private Integer year;
+
+    @OneToMany(mappedBy = "period")
+    @JsonIgnore // Ngăn vòng lặp JSON ở đây
+    private Set<Activity> activities = new LinkedHashSet<>();
 
 }

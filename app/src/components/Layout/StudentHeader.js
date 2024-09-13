@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function Header() {
+function StudentHeader() {
   return (
     <div>
       {/* Navbar */}
@@ -23,9 +23,9 @@ function Header() {
             </Link>
           </li>
           <li className="nav-item d-none d-sm-inline-block">
-            <a href="#" className="nav-link">
+            <Link to="/student/missing-activities" className="nav-link">
               Claim for missing activities
-            </a>
+            </Link>
           </li>
         </ul>
         {/* Right navbar links */}
@@ -208,4 +208,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default StudentHeader;

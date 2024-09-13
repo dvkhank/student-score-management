@@ -13,6 +13,11 @@ export const endpoints = {
   login: "login",
   user_email: "userInfoEmail",
   user_token: "userinfo",
+  missing_activities: "missing-activities",
+  update_participation: "update-participation",
+  admin_missing: "admin/all-participation",
+  accept_participation: "/admin/accept-participation",
+  decline_participation: "/admin/decline-participation",
 };
 
 export default axios.create({
