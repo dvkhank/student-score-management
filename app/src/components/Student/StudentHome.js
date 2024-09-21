@@ -56,7 +56,6 @@ function StudentHome() {
       if (!userInfo || !userInfo.userId) {
         throw new Error("User info or userId is missing");
       }
-      console.log(typeof userInfo.userId); // Kiểm tra kiểu dữ liệu
 
       // Tạo URL với tham số userId
       let url = `${endpoints["activities"]}?keyword=${keyword}&page=${page}&periodId=${selectedPeriod}&userId=${userInfo.userId}`;
