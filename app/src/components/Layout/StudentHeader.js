@@ -1,6 +1,67 @@
 import { Link } from "react-router-dom";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useUser } from "../Auth/UserContext";
+import { useEffect, useState } from "react";
 
 function StudentHeader() {
+  const [notifications, setNotifications] = useState([]);
+
+  const supabase = useSupabaseClient();
+  const { userInfo } = useUser();
+  const [error, setError] = useState(null);
+  const studentId = userInfo.studentId;
+  console.log(studentId);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data, error } = await supabase
+        .from("notifications")
+        .select()
+        .eq("student_id", studentId)
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        setError("Could not fech the notifications");
+        setNotifications([]);
+        console.log(error);
+      }
+      if (data) {
+        console.log(data);
+        setNotifications(data);
+        setError(null);
+      }
+    };
+    fetchData();
+
+    const subscription = supabase
+      .channel("notifications-channel")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "notifications",
+          filter: `student_id=eq.${studentId}`,
+        },
+        (payload) => {
+          console.log("Full payload received:", payload);
+          console.log("New notification received:", payload.new);
+          setNotifications((current) => [...current, payload.new]);
+        }
+      )
+      .subscribe((status, err) => {
+        if (status === "SUBSCRIBED") {
+          console.log("Subscribed to realtime channel successfully");
+        } else if (status === "TIMED_OUT") {
+          console.error("Subscription to realtime channel timed out", err);
+        } else if (status === "CLOSED") {
+          console.log("Realtime channel subscription closed");
+        } else if (err) {
+          console.error("Error during subscription:", err);
+        }
+      });
+  }, []);
+
   return (
     <div>
       {/* Navbar */}
@@ -25,6 +86,21 @@ function StudentHeader() {
           <li className="nav-item d-none d-sm-inline-block">
             <Link to="/student/missing-activities" className="nav-link">
               Claim for missing activities
+            </Link>
+          </li>
+          <li className="nav-item d-none d-sm-inline-block">
+            <Link to="/student/scores" className="nav-link">
+              See your scores
+            </Link>
+          </li>
+          <li className="nav-item d-none d-sm-inline-block">
+            <Link to="/student/chat-admin" className="nav-link">
+              Chatchit
+            </Link>
+          </li>
+          <li className="nav-item d-none d-sm-inline-block">
+            <Link to="/student/chat-gemini" className="nav-link">
+              Study with Gemini
             </Link>
           </li>
         </ul>
@@ -65,141 +141,39 @@ function StudentHeader() {
               </form>
             </div>
           </li>
-          {/* Messages Dropdown Menu */}
-          <li className="nav-item dropdown">
-            <a className="nav-link" data-toggle="dropdown" href="#">
-              <i className="far fa-comments" />
-              <span className="badge badge-danger navbar-badge">3</span>
-            </a>
-            <div className="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-              <a href="#" className="dropdown-item">
-                {/* Message Start */}
-                <div className="media">
-                  <img
-                    src="dist/img/user1-128x128.jpg"
-                    alt="User Avatar"
-                    className="img-size-50 mr-3 img-circle"
-                  />
-                  <div className="media-body">
-                    <h3 className="dropdown-item-title">
-                      Brad Diesel
-                      <span className="float-right text-sm text-danger">
-                        <i className="fas fa-star" />
-                      </span>
-                    </h3>
-                    <p className="text-sm">Call me whenever you can...</p>
-                    <p className="text-sm text-muted">
-                      <i className="far fa-clock mr-1" /> 4 Hours Ago
-                    </p>
-                  </div>
-                </div>
-                {/* Message End */}
-              </a>
-              <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item">
-                {/* Message Start */}
-                <div className="media">
-                  <img
-                    src="dist/img/user8-128x128.jpg"
-                    alt="User Avatar"
-                    className="img-size-50 img-circle mr-3"
-                  />
-                  <div className="media-body">
-                    <h3 className="dropdown-item-title">
-                      John Pierce
-                      <span className="float-right text-sm text-muted">
-                        <i className="fas fa-star" />
-                      </span>
-                    </h3>
-                    <p className="text-sm">I got your message bro</p>
-                    <p className="text-sm text-muted">
-                      <i className="far fa-clock mr-1" /> 4 Hours Ago
-                    </p>
-                  </div>
-                </div>
-                {/* Message End */}
-              </a>
-              <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item">
-                {/* Message Start */}
-                <div className="media">
-                  <img
-                    src="dist/img/user3-128x128.jpg"
-                    alt="User Avatar"
-                    className="img-size-50 img-circle mr-3"
-                  />
-                  <div className="media-body">
-                    <h3 className="dropdown-item-title">
-                      Nora Silvester
-                      <span className="float-right text-sm text-warning">
-                        <i className="fas fa-star" />
-                      </span>
-                    </h3>
-                    <p className="text-sm">The subject goes here</p>
-                    <p className="text-sm text-muted">
-                      <i className="far fa-clock mr-1" /> 4 Hours Ago
-                    </p>
-                  </div>
-                </div>
-                {/* Message End */}
-              </a>
-              <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item dropdown-footer">
-                See All Messages
-              </a>
-            </div>
-          </li>
-          {/* Notifications Dropdown Menu */}
+
+          {/* Notifications Dropdown */}
           <li className="nav-item dropdown">
             <a className="nav-link" data-toggle="dropdown" href="#">
               <i className="far fa-bell" />
-              <span className="badge badge-warning navbar-badge">15</span>
+              {notifications.length > 0 && (
+                <span className="badge badge-warning navbar-badge">
+                  {notifications.length}
+                </span>
+              )}
             </a>
             <div className="dropdown-menu dropdown-menu-lg dropdown-menu-right">
               <span className="dropdown-item dropdown-header">
-                15 Notifications
+                {notifications.length} Notifications
               </span>
-              <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item">
-                <i className="fas fa-envelope mr-2" /> 4 new messages
-                <span className="float-right text-muted text-sm">3 mins</span>
-              </a>
-              <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item">
-                <i className="fas fa-users mr-2" /> 8 friend requests
-                <span className="float-right text-muted text-sm">12 hours</span>
-              </a>
-              <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item">
-                <i className="fas fa-file mr-2" /> 3 new reports
-                <span className="float-right text-muted text-sm">2 days</span>
-              </a>
+              {notifications.map((notif, index) => (
+                <>
+                  <div key={index} className="dropdown-divider" />
+                  <a href="#" className="dropdown-item">
+                    <i className="fas fa-envelope mr-2" />
+                    {notif.message}
+                    <span className="float-right text-muted text-sm">
+                      {new Date(notif.created_at).toDateString()}{" "}
+                      {new Date(notif.created_at).toLocaleTimeString()}
+                    </span>
+                  </a>
+                </>
+              ))}
               <div className="dropdown-divider" />
               <a href="#" className="dropdown-item dropdown-footer">
                 See All Notifications
               </a>
             </div>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              data-widget="fullscreen"
-              href="#"
-              role="button"
-            >
-              <i className="fas fa-expand-arrows-alt" />
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              data-widget="control-sidebar"
-              data-controlsidebar-slide="true"
-              href="#"
-              role="button"
-            >
-              <i className="fas fa-th-large" />
-            </a>
           </li>
         </ul>
       </nav>

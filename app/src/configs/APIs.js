@@ -18,6 +18,10 @@ export const endpoints = {
   admin_missing: "admin/all-participation",
   accept_participation: "/admin/accept-participation",
   decline_participation: "/admin/decline-participation",
+  score_by_kind: "/student/get-score-by-kind",
+  activities_by_kind: "/student/get-activities-by-kind",
+  stats_by_faculty: "/admin/stats-by-faculty",
+  stats_by_class: "/admin/stats-by-class",
 };
 
 export default axios.create({

@@ -1,3 +1,4 @@
+import { NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 function AdminHeader() {
@@ -26,6 +27,15 @@ function AdminHeader() {
             <Link to="/admin/missing-activities" href="#" className="nav-link">
               Phe duyet bao thieu
             </Link>
+          </li>
+          <li>
+            <NavDropdown title="Stastistics" id="navbarScrollingDropdown">
+              <NavDropdown.Item>
+                <Link to="/admin/stats" className="nav-link">
+                  Stastictis by faculty
+                </Link>
+              </NavDropdown.Item>
+            </NavDropdown>
           </li>
         </ul>
         {/* Right navbar links */}
@@ -65,6 +75,7 @@ function AdminHeader() {
               </form>
             </div>
           </li>
+
           {/* Messages Dropdown Menu */}
           <li className="nav-item dropdown">
             <a className="nav-link" data-toggle="dropdown" href="#">

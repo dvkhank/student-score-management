@@ -4,6 +4,7 @@ import SideNav from "../Layout/SideNav";
 import APIs, { endpoints } from "../../configs/APIs";
 import MySprinner from "../Commons/MySprinner";
 import { Button, Container, Form, Modal, Navbar, Table } from "react-bootstrap";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 function MissingActivities() {
   const [periods, setPeriods] = useState([]);
@@ -12,6 +13,7 @@ function MissingActivities() {
   const [missingActivities, setMissingActivities] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedMissingActivity, setSelectedMissingActivity] = useState(null);
+  const supabase = useSupabaseClient();
 
   const handlePeriodChange = (event) => {
     const periodId = event.target.value;
@@ -60,6 +62,16 @@ function MissingActivities() {
     try {
       setLoading(true);
       const res = await APIs.put(endpoints["accept_participation"], formData);
+      // Send notification
+      const { data, error } = await supabase.from("notifications").insert([
+        {
+          student_id: selectedMissingActivity.student.id,
+          message: "Your activity has been accepted!",
+        },
+      ]);
+
+      if (error) throw error;
+
       setShowModal(false);
       loadMissingActivities();
       alert("Accept Successfully");

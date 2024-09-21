@@ -12,6 +12,10 @@ import MissingActivities from "./components/Student/MissingActivities";
 import { UserProvider } from "./components/Auth/UserContext";
 import PrivateRoute from "./components/Auth/PrivateRoute";
 import AdminMissingActivities from "./components/Activity/MissingActivities";
+import ScoreDetails from "./components/Student/ScoreDetails";
+import Stats from "./components/Layout/Stats";
+import StudentChat from "./components/Chat/StudentChat";
+import GeminiChat from "./components/Chat/GeminiChat";
 
 function App() {
   return (
@@ -32,6 +36,10 @@ function App() {
             path="/admin/missing-activities"
             element={<AdminMissingActivities />}
           />
+          <Route path="/student/scores" element={<ScoreDetails />} />
+          <Route path="/admin/stats" element={<Stats />} />
+          <Route path="/student/chat-admin" element={<StudentChat />} />
+          <Route path="/student/chat-gemini" element={<GeminiChat />} />
         </Routes>
         <Footer />
       </BrowserRouter>
