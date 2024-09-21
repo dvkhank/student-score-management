@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import APIs, { endpoints } from "../../configs/APIs";
-import axios from "axios";
 
 const Activity = () => {
   const [data, setData] = useState({
@@ -84,6 +83,7 @@ const Activity = () => {
     loadData("kinds", "kinds");
     loadData("faculties", "faculties");
     loadData("periods", "periods");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

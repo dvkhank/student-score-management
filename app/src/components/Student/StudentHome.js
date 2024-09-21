@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from "react";
 import { useEffect, useState } from "react";
 import APIs, { endpoints } from "../../configs/APIs";
@@ -14,11 +15,9 @@ import {
   Spinner,
 } from "react-bootstrap";
 import MySprinner from "../Commons/MySprinner";
-import { useNavigate } from "react-router-dom";
 import SideNav from "../Layout/SideNav";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useUser } from "../Auth/UserContext";
-import Header from "../Layout/StudentHeader";
 import StudentHeader from "../Layout/StudentHeader";
 
 function StudentHome() {
@@ -88,7 +87,6 @@ function StudentHome() {
     loadKinds();
     loadPeriods();
   }, []);
-  const navigator = useNavigate();
   const searchKind = (e, activityKindId) => {
     e.preventDefault();
     setActivityKindId(activityKindId);

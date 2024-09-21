@@ -10,7 +10,6 @@ import Signup from "./components/Auth/Signup";
 import StudentHome from "./components/Student/StudentHome";
 import MissingActivities from "./components/Student/MissingActivities";
 import { UserProvider } from "./components/Auth/UserContext";
-import PrivateRoute from "./components/Auth/PrivateRoute";
 import AdminMissingActivities from "./components/Activity/MissingActivities";
 import ScoreDetails from "./components/Student/ScoreDetails";
 import Stats from "./components/Layout/Stats";

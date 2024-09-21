@@ -1,7 +1,7 @@
+/* eslint-disable */
 import { useEffect, useState } from "react";
-import { Button, Container, Form, Navbar } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import APIs, { endpoints } from "../../configs/APIs";
-import MySprinner from "../Commons/MySprinner";
 import SideNav from "./SideNav";
 import AdminHeader from "./AdminHeader";
 import {

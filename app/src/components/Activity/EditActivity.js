@@ -103,6 +103,7 @@ const EditActivity = () => {
     loadData("faculties", "faculties");
     loadData("periods", "periods");
     loadActivityData(); // Tải dữ liệu hoạt động khi component mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return (
