@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from "react";
 import { useEffect, useState } from "react";
 import APIs, { endpoints } from "../../configs/APIs";

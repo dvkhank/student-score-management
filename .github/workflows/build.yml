@@ -35,6 +35,10 @@ jobs:
       run: |
         cd app
         npm install
+    - name: Lint React code
+      run: |
+        cd app
+        npm run lint -- --quiet || true
 
     - name: Build React app
       run: |

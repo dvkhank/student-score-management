@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import SideNav from "../Layout/SideNav";
 import StudentHeader from "../Layout/StudentHeader";
 function StudentChat() {
-  const [showPicker, setShowPicker] = useState(false);
   const { userInfo } = useUser();
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState("");

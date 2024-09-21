@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import APIs, { endpoints } from "../../configs/APIs";
