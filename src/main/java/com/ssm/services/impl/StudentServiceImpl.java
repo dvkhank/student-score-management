@@ -11,7 +11,8 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public Student getStudentByUserId(Long id) {
+//    @Cacheable(value = "students", key = "#id")
+    public Student  getStudentByUserId(Long id) {
         return studentRepository.findByUser_Id(id);
     }
 }

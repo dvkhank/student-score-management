@@ -16,7 +16,8 @@ public class ApiActivityKindController {
     private ActivityKindService activityKindService;
     @GetMapping("/kinds")
     public List<ActivityKind> getAllActivityKind(){
-        return activityKindService.getAll();
+        List<ActivityKind> activityKinds = activityKindService.getAll();
+        return activityKinds;
     }
 
 }

@@ -84,6 +84,7 @@ public class ApiParticipation {
     public ResponseEntity<?> getAllAdminParticipation(@RequestParam String periodId) {
         return ResponseEntity.ok().body(participationService.getAllMissingActivitiesByAdmin(Long.valueOf(periodId)));
     }
+
     @PutMapping("/admin/accept-participation")
     public ResponseEntity<?> acceptParticipation(@RequestPart String studentId, @RequestPart String activityId) {
         ParticipationId participationId = new ParticipationId();
@@ -95,6 +96,7 @@ public class ApiParticipation {
         participationRepository.save(participation);
         return ResponseEntity.ok().build();
     }
+
     @PutMapping("/admin/decline-participation")
     public ResponseEntity<?> declineParticipation(@RequestPart String studentId, @RequestPart String activityId) {
         ParticipationId participationId = new ParticipationId();
@@ -106,4 +108,27 @@ public class ApiParticipation {
         participationRepository.save(participation);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/student/get-score-by-kind")
+    public ResponseEntity<?> getScoreByKind(@RequestParam String userId, @RequestParam String periodId) {
+        Long studentId = studentRepository.findByUser_Id(Long.valueOf(userId)).getId();
+        return ResponseEntity.ok().body(participationService.getScoreByKind(Long.valueOf(studentId), Long.valueOf(periodId)));
+    }
+
+    @GetMapping("/student/get-activities-by-kind")
+    public ResponseEntity<?> getActivityByKind1(@RequestParam String userId, @RequestParam String periodId) {
+        Long studentId = studentRepository.findByUser_Id(Long.valueOf(userId)).getId();
+        return ResponseEntity.ok().body(participationService.getActivitiesByKind(Long.valueOf(studentId), Long.valueOf(periodId)));
+    }
+
+    @GetMapping("/admin/stats-by-faculty")
+    public ResponseEntity<?> statesByFaculty(@RequestParam String periodId, @RequestParam String achievement) {
+        return ResponseEntity.ok().body(participationService.SumScore(Long.valueOf(periodId),achievement));
+    }
+
+    @GetMapping("/admin/stats-by-class")
+    public ResponseEntity<?> statsByClass(@RequestParam String periodId, @RequestParam String facultyId, @RequestParam String achievement) {
+        return ResponseEntity.ok().body(participationService.sumScoreByClass(Long.valueOf(periodId),Long.valueOf(facultyId),achievement));
+    }
 }
+

@@ -116,6 +116,7 @@ public class ApiLogin {
                 response.put("startYear", student.getClassField().getStartYear());
                 response.put("faculty", student.getClassField().getFaculty().getName());
                 response.put("role", "student");
+                response.put("studentId", student.getId());
             } else {
                 response.put("role", "admin");
             }

@@ -4,6 +4,7 @@ import com.ssm.models.Period;
 import com.ssm.repositories.PeriodRepository;
 import com.ssm.services.PeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,9 @@ import java.util.List;
 public class PeriodServiceImpl implements PeriodService {
     @Autowired
     private PeriodRepository periodRepository;
+
+    @Cacheable(value = "periods", key = "'periods'")
+    @Override
     public List<Period> getAllPeriod() {
         return periodRepository.findAll();
     }
