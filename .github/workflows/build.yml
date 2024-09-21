@@ -24,9 +24,7 @@ jobs:
 
 
     - name: Build Spring Boot app with Gradle
-      run: |
-        cd student-score-management
-        ./gradlew build -x test
+      run: ./gradlew build -x test 
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
