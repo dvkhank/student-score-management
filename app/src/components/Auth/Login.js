@@ -96,9 +96,6 @@ function Login() {
   useEffect(() => {
     handleCallback();
   }, []);
-  async function signOut() {
-    await supabase.auth.signOut();
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();

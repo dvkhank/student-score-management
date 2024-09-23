@@ -18,11 +18,19 @@ import SideNav from "../Layout/SideNav";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useUser } from "../Auth/UserContext";
 import StudentHeader from "../Layout/StudentHeader";
-
+import { useNavigate } from "react-router-dom";
+import Certificates from "../Commons/Certificates.png";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { format } from "date-fns";
 function StudentHome() {
+  const supabase = useSupabaseClient();
+  const navigate = useNavigate();
   const session = useSession();
   const [kinds, setKinds] = useState(null);
   const { userInfo } = useUser();
+  const handleReviewClick = (id) => {
+    navigate(`/student/review/${id}`);
+  };
   const loadKinds = async () => {
     try {
       const res = await APIs.get(endpoints["kinds"]);
@@ -110,7 +118,17 @@ function StudentHome() {
 
   const handleSuccessPayment = async (details, activity) => {
     setLoading(true); // Bắt đầu tải khi thanh toán thành công
-
+    const certificateUrl = await createAndUploadCertificate(activity, userInfo);
+    const { error } = await supabase.from("certificates").insert([
+      {
+        user_id: userInfo.userId,
+        certificate: certificateUrl,
+      },
+    ]);
+    if (error) {
+      console.error("Error sending message:", error);
+    }
+    console.log(certificateUrl);
     try {
       const participationData = {
         activityId: activity.id,
@@ -118,8 +136,8 @@ function StudentHome() {
         parcipatedDate: new Date().toISOString().split("T")[0],
         request: false,
         active: true,
-        description: "Payment successful",
-        evidence: details.id,
+        description: `Payment successful and bill id: ${details.id}`,
+        evidence: certificateUrl,
       };
 
       await APIs.post(endpoints["add_participation"], participationData);
@@ -168,6 +186,7 @@ function StudentHome() {
   const handleEnroll = async (activity) => {
     try {
       setLoading(true);
+
       // Tạo dữ liệu sự kiện
       const event = {
         summary: activity.name,
@@ -221,6 +240,82 @@ function StudentHome() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const createAndUploadCertificate = async (activity, userInfo) => {
+    try {
+      // Tạo canvas và vẽ ảnh template chứng chỉ
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      const templateImg = new Image();
+      templateImg.src = Certificates; // Đường dẫn đến template .png của bạn
+
+      await new Promise((resolve) => {
+        templateImg.onload = () => {
+          // Thiết lập kích thước canvas theo kích thước ảnh
+          canvas.width = templateImg.width;
+          canvas.height = templateImg.height;
+
+          // Vẽ ảnh template lên canvas
+          ctx.drawImage(templateImg, 0, 0);
+
+          // Chèn tên người dùng
+          // Văn bản cần vẽ
+          const userName = userInfo.lastName + " " + userInfo.firstName;
+
+          // Đo chiều dài của văn bản
+          const textWidth = ctx.measureText(userName).width;
+
+          // Chọn điểm chính xác cho vị trí `x` nếu bạn muốn căn giữa chẳng hạn
+          const xPosition = canvas.width / 2 - textWidth / 2; // Căn giữa theo trục X
+          ctx.font = "70px bold Arial"; // Kiểu chữ lớn và đậm cho tên người dùng
+          ctx.fillStyle = "rgb(169, 102, 79)";
+          ctx.textAlign = "start";
+          // Vẽ văn bản tại vị trí x đã điều chỉnh
+          ctx.fillText(userName, 85, 670.9);
+
+          // Chèn tên hoạt động
+          ctx.font = "40px italic Georgia"; // Kiểu chữ nhỏ hơn và nghiêng cho tên hoạt động
+          ctx.fillText(`Activity: ${activity.name}`, 96, 930.3);
+
+          // Chèn ngày
+          ctx.font = "40px italic Georgia"; // Kiểu chữ nhỏ hơn và nghiêng cho tên hoạt động
+          ctx.fillText(formatDate(new Date()), 150, 1320.3);
+
+          resolve();
+        };
+      });
+
+      // Chuyển đổi canvas thành file ảnh (blob)
+      const certificateBlob = await new Promise((resolve) =>
+        canvas.toBlob(resolve, "image/png")
+      );
+
+      // Upload chứng chỉ lên Supabase Storage
+      const fileName = `certificate_${userInfo.userId}_${activity.id}.png`;
+      const { data, error } = await supabase.storage
+        .from("certificates")
+        .upload(`${userInfo.userId}/${fileName}`, certificateBlob);
+
+      if (error) {
+        console.error("Error uploading certificate:", error.message);
+        return null;
+      }
+      // Generate URL for the uploaded file
+
+      const bucketURL =
+        "https://wskbzrgavbinkjdjlfbt.supabase.co/storage/v1/object/public/certificates";
+      const filePath = `${userInfo.userId}/${fileName}`;
+      const publicURL = `${bucketURL}/${filePath}`;
+      return publicURL;
+    } catch (error) {
+      console.error("Error creating and uploading certificate", error);
+      return null;
+    }
+  };
+  const formatDate = (dateString) => {
+    return format(new Date(dateString), "dd/MM/yyyy HH:mm:ss"); // Định dạng theo ý muốn
   };
   return (
     <>
@@ -328,8 +423,11 @@ function StudentHome() {
                               </td>
                               <td>{a.money === 0 ? "Free" : a.money + " $"}</td>
                               <td>
-                                <Button className="btn btn-info mr-1">
-                                  Details
+                                <Button
+                                  onClick={() => handleReviewClick(a.id)}
+                                  className="btn btn-info mr-1"
+                                >
+                                  Review
                                 </Button>
                                 {a.money !== 0 ? (
                                   <PayPalScriptProvider

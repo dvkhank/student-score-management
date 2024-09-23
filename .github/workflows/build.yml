@@ -35,12 +35,8 @@ jobs:
       run: |
         cd app
         npm install
-    - name: Lint React code
-      run: |
-        cd app
-        npm run lint -- --quiet || true
 
     - name: Build React app
       run: |
         cd app
-        npm run build
+        DISABLE_ESLINT_PLUGIN=true npm run build

@@ -1,7 +1,7 @@
 import React from "react";
 import "../Auth/Style.css";
 import { Link } from "react-router-dom";
-import { Button, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 
 function Signup() {
   return (

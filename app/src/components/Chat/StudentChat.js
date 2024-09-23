@@ -55,7 +55,6 @@ function StudentChat() {
           table: "messages",
         },
         (payload) => {
-          console.log("New message received:", payload.new);
           setMessages((current) => [...current, payload.new]);
         }
       )
@@ -80,7 +79,6 @@ function StudentChat() {
         "https://wskbzrgavbinkjdjlfbt.supabase.co/storage/v1/object/public/images";
       const filePath = `${userInfo.userId}/${selectedFile.name}`;
       const publicURL = `${bucketURL}/${filePath}`;
-      console.log("Public URL:", publicURL);
       return publicURL;
     } catch (error) {
       console.error("Error uploading file:", error);

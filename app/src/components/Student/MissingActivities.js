@@ -5,7 +5,6 @@ import APIs, { endpoints } from "../../configs/APIs";
 import { Button, Container, Form, Modal, Navbar, Table } from "react-bootstrap";
 import MySprinner from "../Commons/MySprinner";
 import { useUser } from "../Auth/UserContext";
-import { Alert } from "bootstrap";
 
 function MissingActivities() {
   const { userInfo } = useUser();

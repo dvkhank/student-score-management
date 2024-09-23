@@ -10,7 +10,6 @@ function StudentHeader() {
   const { userInfo } = useUser();
   const [error, setError] = useState(null);
   const studentId = userInfo.studentId;
-  console.log(studentId);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,6 +100,11 @@ function StudentHeader() {
           <li className="nav-item d-none d-sm-inline-block">
             <Link to="/student/chat-gemini" className="nav-link">
               Study with Gemini
+            </Link>
+          </li>
+          <li>
+            <Link to="/student/certificates" className="nav-link">
+              See your certificates{" "}
             </Link>
           </li>
         </ul>

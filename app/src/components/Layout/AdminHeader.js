@@ -12,7 +12,7 @@ function AdminHeader() {
             <a
               className="nav-link"
               data-widget="pushmenu"
-              href="#"
+              href="javascript:void(0);"
               role="button"
             >
               <i className="fas fa-bars" />
@@ -24,7 +24,11 @@ function AdminHeader() {
             </Link>
           </li>
           <li className="nav-item d-none d-sm-inline-block">
-            <Link to="/admin/missing-activities" href="#" className="nav-link">
+            <Link
+              to="/admin/missing-activities"
+              href="javascript:void(0);"
+              className="nav-link"
+            >
               Phe duyet bao thieu
             </Link>
           </li>
@@ -45,7 +49,7 @@ function AdminHeader() {
             <a
               className="nav-link"
               data-widget="navbar-search"
-              href="#"
+              href="javascript:void(0);"
               role="button"
             >
               <i className="fas fa-search" />
@@ -78,12 +82,12 @@ function AdminHeader() {
 
           {/* Messages Dropdown Menu */}
           <li className="nav-item dropdown">
-            <a className="nav-link" data-toggle="dropdown" href="#">
+            <a className="nav-link" data-toggle="dropdown">
               <i className="far fa-comments" />
               <span className="badge badge-danger navbar-badge">3</span>
             </a>
             <div className="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-              <a href="#" className="dropdown-item">
+              <a className="dropdown-item">
                 {/* Message Start */}
                 <div className="media">
                   <img
@@ -107,7 +111,7 @@ function AdminHeader() {
                 {/* Message End */}
               </a>
               <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item">
+              <a className="dropdown-item">
                 {/* Message Start */}
                 <div className="media">
                   <img
@@ -131,7 +135,7 @@ function AdminHeader() {
                 {/* Message End */}
               </a>
               <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item">
+              <a className="dropdown-item">
                 {/* Message Start */}
                 <div className="media">
                   <img
@@ -155,14 +159,12 @@ function AdminHeader() {
                 {/* Message End */}
               </a>
               <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item dropdown-footer">
-                See All Messages
-              </a>
+              <a className="dropdown-item dropdown-footer">See All Messages</a>
             </div>
           </li>
           {/* Notifications Dropdown Menu */}
           <li className="nav-item dropdown">
-            <a className="nav-link" data-toggle="dropdown" href="#">
+            <a className="nav-link" data-toggle="dropdown">
               <i className="far fa-bell" />
               <span className="badge badge-warning navbar-badge">15</span>
             </a>
@@ -171,33 +173,28 @@ function AdminHeader() {
                 15 Notifications
               </span>
               <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item">
+              <a className="dropdown-item">
                 <i className="fas fa-envelope mr-2" /> 4 new messages
                 <span className="float-right text-muted text-sm">3 mins</span>
               </a>
               <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item">
+              <a className="dropdown-item">
                 <i className="fas fa-users mr-2" /> 8 friend requests
                 <span className="float-right text-muted text-sm">12 hours</span>
               </a>
               <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item">
+              <a className="dropdown-item">
                 <i className="fas fa-file mr-2" /> 3 new reports
                 <span className="float-right text-muted text-sm">2 days</span>
               </a>
               <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item dropdown-footer">
+              <a className="dropdown-item dropdown-footer">
                 See All Notifications
               </a>
             </div>
           </li>
           <li className="nav-item">
-            <a
-              className="nav-link"
-              data-widget="fullscreen"
-              href="#"
-              role="button"
-            >
+            <a className="nav-link" data-widget="fullscreen" role="button">
               <i className="fas fa-expand-arrows-alt" />
             </a>
           </li>
@@ -206,7 +203,7 @@ function AdminHeader() {
               className="nav-link"
               data-widget="control-sidebar"
               data-controlsidebar-slide="true"
-              href="#"
+              href="javascript:void(0);"
               role="button"
             >
               <i className="fas fa-th-large" />

@@ -14,7 +14,6 @@ import MySprinner from "../Commons/MySprinner";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SideNav from "./SideNav";
-import Header from "./StudentHeader";
 import AdminHeader from "./AdminHeader";
 function Home() {
   const [kinds, setKinds] = useState(null);

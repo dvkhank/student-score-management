@@ -15,6 +15,8 @@ import ScoreDetails from "./components/Student/ScoreDetails";
 import Stats from "./components/Layout/Stats";
 import StudentChat from "./components/Chat/StudentChat";
 import GeminiChat from "./components/Chat/GeminiChat";
+import Comments from "./components/Student/Comments";
+import Certificates from "./components/Student/Certificates";
 
 function App() {
   return (
@@ -39,6 +41,8 @@ function App() {
           <Route path="/admin/stats" element={<Stats />} />
           <Route path="/student/chat-admin" element={<StudentChat />} />
           <Route path="/student/chat-gemini" element={<GeminiChat />} />
+          <Route path="/student/review/:id" element={<Comments />} />
+          <Route path="/student/certificates" element={<Certificates />} />
         </Routes>
         <Footer />
       </BrowserRouter>
