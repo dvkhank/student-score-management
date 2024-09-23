@@ -40,3 +40,9 @@ jobs:
       run: |
         cd app
         DISABLE_ESLINT_PLUGIN=true npm run build
+    - name: Deploy to Vercel
+      run: |
+        cd app
+        npx vercel --prod
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
