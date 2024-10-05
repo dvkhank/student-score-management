@@ -16,7 +16,7 @@ public interface ParticipationRepository extends JpaRepository<Participation, Pa
     @Query("SELECT p FROM Participation p WHERE p.active = false AND p.request = true AND p.activity.period.id = :periodId")
     List<Participation> getAllMissingActivitiesByAdmin(Long periodId);
 
-    @Query("SELECT k.id, k.description, " +
+    @Query("SELECT k.id, k.description, k.maxScore, " +
             "CASE WHEN SUM(a.score) > k.maxScore THEN k.maxScore ELSE SUM(a.score) END AS totalScore " +
             "FROM Participation p " +
             "JOIN p.student st " +
@@ -24,7 +24,8 @@ public interface ParticipationRepository extends JpaRepository<Participation, Pa
             "JOIN a.period pe " +
             "JOIN a.activityKind k " +
             "WHERE st.id = :studentId AND pe.id = :periodId AND p.active = true " +
-            "GROUP BY k.id")
+            "GROUP BY k.id " +
+            "ORDER BY k.id")
     List<Object[]> getScoreByKind(@Param("studentId") Long studentId,@Param("periodId") Long periodId);
 
     @Query("SELECT a.name, a.score, k.id " +

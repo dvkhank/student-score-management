@@ -37,8 +37,11 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authz ->
                         authz
-                                .requestMatchers("/", "/api/**").permitAll() // Cho phép truy cập không yêu cầu xác thực
-                                .requestMatchers("/admin/**").hasAuthority("admin")
+                                .requestMatchers("/api/student/**").hasAuthority("student")
+                                .requestMatchers("/api/periods","/api/kinds","/api/faculties").permitAll()
+                                .requestMatchers("/api/userinfo/", "/api/userInfoEmail","/api/login").permitAll()
+//                                .requestMatchers("/", "/api/**").permitAll() // Cho phép truy cập không yêu cầu xác thực
+                                .requestMatchers("/api/admin/**").hasAuthority("admin")
                                 .anyRequest().authenticated() // Các yêu cầu khác yêu cầu xác thực
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

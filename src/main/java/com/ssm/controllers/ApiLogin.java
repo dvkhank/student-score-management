@@ -98,6 +98,12 @@ public class ApiLogin {
         try {
             User user = userRepository.findByEmail(email);
 
+            // Quá trình xác thực
+            Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+
+            // Nếu xác thực thành công, tạo JWT token
+            String token = jwtTokenProvider.generateToken(authentication);
+
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
             }
@@ -109,6 +115,7 @@ public class ApiLogin {
             response.put("avatar", user.getAvatar());
             response.put("lastName", user.getLastname());
             response.put("firstName", user.getFirstname());
+            response.put("token", "Bearer " + token);
 
             if ("student".equals(user.getRole())) {
                 Student student = studentService.getStudentByUserId(Long.valueOf(user.getId()));

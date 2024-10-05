@@ -29,17 +29,13 @@ function AdminHeader() {
               href="javascript:void(0);"
               className="nav-link"
             >
-              Phe duyet bao thieu
+              Approve missing activities
             </Link>
           </li>
           <li>
-            <NavDropdown title="Stastistics" id="navbarScrollingDropdown">
-              <NavDropdown.Item>
-                <Link to="/admin/stats" className="nav-link">
-                  Stastictis by faculty
-                </Link>
-              </NavDropdown.Item>
-            </NavDropdown>
+            <Link to="/admin/stats" className="nav-link">
+              Stastictis
+            </Link>
           </li>
         </ul>
         {/* Right navbar links */}

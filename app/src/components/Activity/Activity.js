@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import APIs, { endpoints } from "../../configs/APIs";
+import AdminHeader from "../Layout/AdminHeader";
+import SideNav from "../Layout/SideNav";
 
 const Activity = () => {
   const [data, setData] = useState({
@@ -8,7 +10,7 @@ const Activity = () => {
     faculties: [],
     periods: [],
   });
-
+  const [test, setTest] = useState([]);
   const [errors, setErrors] = useState({});
 
   const [selected, setSelected] = useState({
@@ -67,7 +69,11 @@ const Activity = () => {
     };
 
     try {
-      await APIs.post(endpoints["add_activities"], activityData);
+      await APIs.post(endpoints["add_activities"], activityData, {
+        headers: {
+          Authorization: sessionStorage.getItem("token"), // Thêm token vào header
+        },
+      });
       console.log("Activity Data:", activityData);
       alert("Activity created successfully!");
       setErrors({});
@@ -88,6 +94,8 @@ const Activity = () => {
 
   return (
     <>
+      <SideNav></SideNav>
+      <AdminHeader></AdminHeader>
       <h1 className="text-center text-success">Create an activity</h1>
       <Form className="container" onSubmit={handleSubmit}>
         <Form.Group className="mb-3">

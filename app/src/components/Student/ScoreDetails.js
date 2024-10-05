@@ -18,7 +18,12 @@ function ScoreDetails() {
     try {
       setLoading(true);
       const res = await APIs.get(
-        `${endpoints["activities_by_kind"]}?userId=${userInfo.userId}&periodId=${selectedPeriod}`
+        `${endpoints["activities_by_kind"]}?userId=${userInfo.userId}&periodId=${selectedPeriod}`,
+        {
+          headers: {
+            Authorization: userInfo.token, // Thêm token vào header
+          },
+        }
       );
       setActivitiesKind(res.data);
     } catch {
@@ -40,9 +45,15 @@ function ScoreDetails() {
     try {
       setLoading(true);
       const res = await APIs.get(
-        `${endpoints["score_by_kind"]}?userId=${userInfo.userId}&periodId=${selectedPeriod}`
+        `${endpoints["score_by_kind"]}?userId=${userInfo.userId}&periodId=${selectedPeriod}`,
+        {
+          headers: {
+            Authorization: userInfo.token, // Thêm token vào header
+          },
+        }
       );
       setListScoreByKind(res.data);
+      console.log(res.data);
     } catch {
       console.log("Loi roi");
     } finally {
@@ -119,7 +130,9 @@ function ScoreDetails() {
                               <td className="font-weight-bold">
                                 Kind {score[0]}: {score[1]}
                               </td>
-                              <td className="text-center">{score[2]}</td>
+                              <td className="text-center">
+                                {score[3]} / {score[2]}
+                              </td>
                             </tr>
                             <tr>
                               <td colSpan="1">
@@ -211,7 +224,7 @@ function ScoreDetails() {
                           <td className="font-weight-bold">Total</td>
                           <td className="text-center font-weight-bold">
                             {listScoreByKind.reduce(
-                              (total, score) => total + score[2],
+                              (total, score) => total + score[3],
                               0
                             )}
                           </td>

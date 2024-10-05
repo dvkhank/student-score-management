@@ -31,7 +31,12 @@ function MissingActivities() {
     setLoading(true);
     try {
       const res = await APIs.get(
-        `${endpoints["admin_missing"]}?&periodId=${selectedPeriod}`
+        `${endpoints["admin_missing"]}?&periodId=${selectedPeriod}`,
+        {
+          headers: {
+            Authorization: sessionStorage.getItem("token"), // Thêm token vào header
+          },
+        }
       );
       setMissingActivities(res.data);
     } catch {
@@ -61,7 +66,11 @@ function MissingActivities() {
 
     try {
       setLoading(true);
-      const res = await APIs.put(endpoints["accept_participation"], formData);
+      const res = await APIs.put(endpoints["accept_participation"], formData, {
+        headers: {
+          Authorization: sessionStorage.getItem("token"), // Thêm token vào header
+        },
+      });
       // Send notification
       const { data, error } = await supabase.from("notifications").insert([
         {
@@ -89,7 +98,19 @@ function MissingActivities() {
 
     try {
       setLoading(true);
-      const res = await APIs.put(endpoints["decline_participation"], formData);
+      const res = await APIs.put(endpoints["decline_participation"], formData, {
+        headers: {
+          Authorization: sessionStorage.getItem("token"), // Thêm token vào header
+        },
+      });
+      // Send notification
+      const { data, error } = await supabase.from("notifications").insert([
+        {
+          student_id: selectedMissingActivity.student.id,
+          message: "Your activity has been denied!",
+        },
+      ]);
+      if (error) throw error;
       setShowModal(false);
       loadMissingActivities();
       alert("Decline Successfully");

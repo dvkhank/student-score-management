@@ -73,7 +73,11 @@ function StudentHome() {
       }
 
       // Gọi API
-      const res = await APIs.get(url);
+      const res = await APIs.get(url, {
+        headers: {
+          Authorization: userInfo.token, // Thêm token vào header
+        },
+      });
       if (page === 1) {
         setActivities(res.data);
       } else {
@@ -128,7 +132,6 @@ function StudentHome() {
     if (error) {
       console.error("Error sending message:", error);
     }
-    console.log(certificateUrl);
     try {
       const participationData = {
         activityId: activity.id,
@@ -140,7 +143,11 @@ function StudentHome() {
         evidence: certificateUrl,
       };
 
-      await APIs.post(endpoints["add_participation"], participationData);
+      await APIs.post(endpoints["add_participation"], participationData, {
+        headers: {
+          Authorization: userInfo.token, // Thêm token vào header
+        },
+      });
 
       const event = {
         summary: activity.name,
@@ -227,7 +234,11 @@ function StudentHome() {
           description: "Enroll successful",
         };
         // Gửi dữ liệu về backend
-        await APIs.post(endpoints["add_participation"], participationData);
+        await APIs.post(endpoints["add_participation"], participationData, {
+          headers: {
+            Authorization: userInfo.token, // Thêm token vào header
+          },
+        });
         alert("Sự kiện đã được đăng kí thành công trên Google Calendar!");
         loadActivities();
       } else {

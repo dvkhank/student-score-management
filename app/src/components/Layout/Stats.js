@@ -80,7 +80,12 @@ function Stats() {
     try {
       setLoading(true);
       const res = await APIs.get(
-        `${endpoints["stats_by_faculty"]}?periodId=${selectedPeriod}&achievement=${selectedAchievement}`
+        `${endpoints["stats_by_faculty"]}?periodId=${selectedPeriod}&achievement=${selectedAchievement}`,
+        {
+          headers: {
+            Authorization: sessionStorage.getItem("token"), // Thêm token vào header
+          },
+        }
       );
       setStatsByFaculty(res.data);
     } catch {
@@ -93,7 +98,12 @@ function Stats() {
     try {
       setLoading(true);
       const res = await APIs.get(
-        `${endpoints["stats_by_class"]}?periodId=${selectedPeriod}&facultyId=${selectedFaculty}&achievement=${selectedAchievement}`
+        `${endpoints["stats_by_class"]}?periodId=${selectedPeriod}&facultyId=${selectedFaculty}&achievement=${selectedAchievement}`,
+        {
+          headers: {
+            Authorization: sessionStorage.getItem("token"), // Thêm token vào header
+          },
+        }
       );
       setStatsByClass(res.data);
     } catch {

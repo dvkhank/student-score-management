@@ -17,6 +17,7 @@ import StudentChat from "./components/Chat/StudentChat";
 import GeminiChat from "./components/Chat/GeminiChat";
 import Comments from "./components/Student/Comments";
 import Certificates from "./components/Student/Certificates";
+import Progress from "./components/Student/Progress";
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/admin/add-activity" element={<Activity />} />
           <Route path="/admin/" element={<Home />} />
-          <Route path="/student/" element={<StudentHome />} />
+          <Route path="/student/activities" element={<StudentHome />} />
           <Route path="/admin/edit-activity/:id" element={<EditActivity />} />
           <Route
             path="/student/missing-activities"
@@ -43,6 +44,7 @@ function App() {
           <Route path="/student/chat-gemini" element={<GeminiChat />} />
           <Route path="/student/review/:id" element={<Comments />} />
           <Route path="/student/certificates" element={<Certificates />} />
+          <Route path="/student/" element={<Progress />} />
         </Routes>
         <Footer />
       </BrowserRouter>

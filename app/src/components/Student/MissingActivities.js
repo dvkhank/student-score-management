@@ -53,6 +53,7 @@ function MissingActivities() {
       const res = await APIs.put(endpoints["update_participation"], formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: userInfo.token, // Thêm token vào header
         },
       });
       console.log(res.data); // Xử lý phản hồi từ API
@@ -74,7 +75,12 @@ function MissingActivities() {
     setLoading(true);
     try {
       const res = await APIs.get(
-        `${endpoints["missing_activities"]}?userId=${userInfo.userId}&periodId=${selectedPeriod}`
+        `${endpoints["missing_activities"]}?userId=${userInfo.userId}&periodId=${selectedPeriod}`,
+        {
+          headers: {
+            Authorization: userInfo.token, // Thêm token vào header
+          },
+        }
       );
       setMissingActivities(res.data);
     } catch {

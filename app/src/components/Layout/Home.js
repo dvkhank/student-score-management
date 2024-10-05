@@ -41,7 +41,11 @@ function Home() {
       if (activityKindId) {
         url = `${url}&activityKindId=${activityKindId}`;
       }
-      const res = await APIs.get(url);
+      const res = await APIs.get(url, {
+        headers: {
+          Authorization: sessionStorage.getItem("token"), // Thêm token vào header
+        },
+      });
       if (page === 1) setActivities(res.data);
       else
         setActivities((current) => {
@@ -78,7 +82,11 @@ function Home() {
       return;
     }
     try {
-      await axios.delete(`${endpoints["admin_activities"]}/${id}`);
+      await APIs.delete(`${endpoints["admin_activities"]}/${id}`, {
+        headers: {
+          Authorization: sessionStorage.getItem("token"), // Thêm token vào header
+        },
+      });
       alert("Activity deleted successfully");
       loadActivities(); // Reload the activities list
     } catch (err) {

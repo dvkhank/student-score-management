@@ -78,8 +78,13 @@ function StudentHeader() {
             </a>
           </li>
           <li className="nav-item d-none d-sm-inline-block">
-            <Link to="/student" className="nav-link">
+            <Link to="/student/" className="nav-link">
               Home
+            </Link>
+          </li>
+          <li className="nav-item d-none d-sm-inline-block">
+            <Link to="/student/activities" className="nav-link">
+              Activities
             </Link>
           </li>
           <li className="nav-item d-none d-sm-inline-block">

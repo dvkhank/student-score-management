@@ -19,16 +19,17 @@ public class ApiActivityController {
     @Autowired
     private ActivityService activityService;
 
-    @GetMapping("/activities")
+    @GetMapping("/admin/activities")
     public List<Activity> getActivities(@RequestParam Map<String, String> params) {
         return activityService.getActivities(params);
     }
-    @GetMapping("/studentactivities")
+
+    @GetMapping("/student/activities")
     public List<Activity> getStudentActivities(@RequestParam Map<String, String> params) {
         return activityService.getActivitiesByStudent(params);
     }
 
-    @PostMapping("/add-activity")
+    @PostMapping("/admin/add-activity")
     public ResponseEntity addActivity(@Valid @RequestBody Activity activity, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
@@ -41,7 +42,7 @@ public class ApiActivityController {
         return ResponseEntity.ok("Activity created successfully");
     }
 
-    @PutMapping("/activities/{id}")
+    @PutMapping("/admin/activities/{id}")
     public ResponseEntity updateActivity(@PathVariable Long id, @Valid @RequestBody Activity activity, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
@@ -55,15 +56,19 @@ public class ApiActivityController {
         return ResponseEntity.ok("Activity updated successfully");
     }
 
-    @DeleteMapping("/activities/{id}")
+    @DeleteMapping("/admin/activities/{id}")
     public ResponseEntity deleteActivity(@PathVariable Long id) {
         activityService.deleteActivityById(id);
         return ResponseEntity.ok("Activity deleted successfully");
     }
 
-    @GetMapping("/activities/{id}")
+    @GetMapping("/admin/activities/{id}")
     public Optional<Activity> getActivity(@PathVariable Long id) {
         return activityService.getActivityById(id);
-
+    }
+    @GetMapping("/student/activities/{id}")
+    public Optional<Activity> getActivityByStudent(@PathVariable Long id) {
+        return activityService.getActivityById(id);
     }
 }
+

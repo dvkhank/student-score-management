@@ -52,7 +52,11 @@ function Comments() {
   }, [id]);
   const loadActivityById = async () => {
     try {
-      const res = await APIs.get(`${endpoints["admin_activities"]}/${id}`);
+      const res = await APIs.get(`${endpoints["activities"]}/${id}`, {
+        headers: {
+          Authorization: userInfo.token, // Thêm token vào header
+        },
+      });
       setActivityInfo(res.data);
       console.log(res.data);
     } catch {

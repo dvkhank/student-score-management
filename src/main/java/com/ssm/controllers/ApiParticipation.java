@@ -30,19 +30,19 @@ public class ApiParticipation {
     @Autowired
     private ParticipationRepository participationRepository;
 
-    @PostMapping("/participation")
+    @PostMapping("/student/participation")
     public ResponseEntity<?> saveParticipation(@RequestBody ParticipationCreation participationCreation) {
         participationService.addOrUpdateActivity(participationCreation);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/missing-activities")
+    @GetMapping("/student/missing-activities")
     public ResponseEntity<?> getMissingActivities(@RequestParam String userId, @RequestParam String periodId) {
         List<Activity> missingActivities = participationService.getMissingActivity(Long.valueOf(userId), Long.valueOf(periodId));
         return ResponseEntity.ok().body(missingActivities);
     }
 
-    @PutMapping("/update-participation")
+    @PutMapping("/student/update-participation")
     public ResponseEntity<?> updateParticipation(
             @RequestPart("activityId") String activityId,
             @RequestPart("description") String description,
@@ -80,7 +80,7 @@ public class ApiParticipation {
         return ResponseEntity.ok().body(participationService.getAllParticipation());
     }
 
-    @GetMapping("admin/all-participation")
+    @GetMapping("/admin/all-participation")
     public ResponseEntity<?> getAllAdminParticipation(@RequestParam String periodId) {
         return ResponseEntity.ok().body(participationService.getAllMissingActivitiesByAdmin(Long.valueOf(periodId)));
     }

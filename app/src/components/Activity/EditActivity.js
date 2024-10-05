@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import APIs, { endpoints } from "../../configs/APIs";
 import { useParams } from "react-router-dom"; // Để lấy ID từ URL
+import AdminHeader from "../Layout/AdminHeader";
+import SideNav from "../Layout/SideNav";
 
 const EditActivity = () => {
   const { id } = useParams(); // Lấy ID từ URL
@@ -46,7 +48,11 @@ const EditActivity = () => {
 
   const loadActivityData = async () => {
     try {
-      const res = await APIs.get(`${endpoints["admin_activities"]}/${id}`);
+      const res = await APIs.get(`${endpoints["admin_activities"]}/${id}`, {
+        headers: {
+          Authorization: sessionStorage.getItem("token"), // Thêm token vào header
+        },
+      });
       setFormData({
         name: res.data.name,
         description: res.data.description,
@@ -86,7 +92,11 @@ const EditActivity = () => {
     };
 
     try {
-      await APIs.put(`${endpoints["admin_activities"]}/${id}`, activityData);
+      await APIs.put(`${endpoints["admin_activities"]}/${id}`, activityData, {
+        headers: {
+          Authorization: sessionStorage.getItem("token"), // Thêm token vào header
+        },
+      });
       console.log("Activity Data:", activityData);
       alert("Activity updated successfully!");
       setErrors({});
@@ -108,6 +118,8 @@ const EditActivity = () => {
 
   return (
     <>
+      <AdminHeader></AdminHeader>
+      <SideNav></SideNav>
       <h1 className="text-center text-success">Edit Activity</h1>
       <Form className="container" onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
